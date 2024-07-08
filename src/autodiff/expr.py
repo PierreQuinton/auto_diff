@@ -1,2 +1,2 @@
-class Expression():
+class Expr():
     pass
