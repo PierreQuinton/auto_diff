@@ -1,3 +1,5 @@
 from autodiff.expr import Expr
+
 class Val(Expr):
-    pass
+    def __init__(self, val: float) -> None:
+        self.val = val
