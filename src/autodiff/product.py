@@ -31,6 +31,10 @@ class Product(Function):
         return Sum(products)
 
 
+    def __repr__(self):
+        string = """This class handles multiplication and product differentiation"""
+
+
 class Neg(Product):
 
     def __init__(self, function: Function):

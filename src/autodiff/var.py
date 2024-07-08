@@ -10,6 +10,8 @@ class Var(Function):
     def _evaluate(self, values: dict[Var, Val]) -> Val:
         return values[self]
     
-    # def differentiate(self, var: Var) -> Function:
-    #     return Val(0 , 1)
-    
+    def differentiate(self, var: Var) -> Function:
+        if var in self.vars:
+            return Val(1.0)
+        else:
+            return Val(0.0)
