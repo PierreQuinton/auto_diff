@@ -19,6 +19,6 @@ class Compose(Function):
         return self.outer.evaluate({self.outer_var: inner_val})
 
 
-    def differentiate(self) -> Function:
+    def differentiate(self, var: Var) -> Function:
         raise NotImplementedError
-        # Multiply([self.innner.differentiate(), Compose(self.outer.differentiate, self.inner)])
+        # Multiply([self.inner.differentiate(), Compose(self.outer.differentiate, self.inner)])

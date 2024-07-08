@@ -11,5 +11,5 @@ class Val(Function):
         return self
 
 
-    def differentiate(self, vars: set[Var]) -> Function:
+    def differentiate(self, var: Var) -> Function:
         return Val(0.0)
