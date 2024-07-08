@@ -1,4 +1,5 @@
 from autodiff.expr import Expr
+from autodiff.functions import Function
 from autodiff.val import Val
 from autodiff.var import Var
 
@@ -17,5 +18,5 @@ class Function(Expr):
         raise NotImplementedError
 
 
-    def differentiate(self) -> Expr:
+    def differentiate(self, vars: set[Var]) -> Function:
         raise NotImplementedError
