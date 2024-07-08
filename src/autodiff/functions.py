@@ -1,9 +1,8 @@
-from autodiff.expr import Expr
-from autodiff.functions import Function
+from __future__ import annotations
 from autodiff.val import Val
 from autodiff.var import Var
 
-class Function(Expr):
+class Function():
     def __init__(self, vars: set[Var]) -> None:
         self.vars = vars
 

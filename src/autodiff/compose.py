@@ -1,7 +1,6 @@
-from autodiff.functions.base import Function
+from autodiff.functions import Function
 from autodiff.val import Val
 from autodiff.var import Var
-from autodiff.expr import Expr
 
 class Compose(Function):
     def __init__(self, inner: Function, outer: Function) -> None:
