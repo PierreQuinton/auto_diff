@@ -17,5 +17,5 @@ class Function():
         raise NotImplementedError
 
 
-    def differentiate(self, vars: set[Var]) -> Function:
+    def differentiate(self, var: Var) -> Function:
         raise NotImplementedError
