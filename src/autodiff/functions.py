@@ -7,7 +7,7 @@ class Function():
         self.vars = vars
 
 
-    def evaluate(self, values: dict[Var, Val]) -> Val:
+    def __apply__(self, values: dict[Var, Val]) -> Val:
         if values.keys != self.vars:
             raise ValueError("Wrong keys")
         self._evaluate(values)

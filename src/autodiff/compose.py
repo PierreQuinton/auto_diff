@@ -16,8 +16,8 @@ class Compose(Function):
 
 
     def _evaluate(self, values: dict[Var, Val]) -> Val:
-        inner_val = self.inner.evaluate(values)
-        return self.outer.evaluate({self.outer_var: inner_val})
+        inner_val = self.inner(values)
+        return self.outer({self.outer_var: inner_val})
 
 
     def differentiate(self, var: Var) -> Function:

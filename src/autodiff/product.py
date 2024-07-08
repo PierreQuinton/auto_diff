@@ -8,14 +8,14 @@ from autodiff.var import Var
 
 class Product(Function):
 
-    def __init__(self, functions: set[Function]):
+    def __init__(self, functions: list[Function]):
         super().__init__({var for function in functions for var in function.vars})
         self.functions = functions
 
 
     def _evaluate(self, values: dict[Var, Val]) -> Val:
         restricted_vals = [{var:values[var] for var in function.vars} for function in self.functions]
-        fin_vals = [function.evaluate(values).val for values, function in zip(restricted_vals, self.functions)]
+        fin_vals = [function(values).val for values, function in zip(restricted_vals, self.functions)]
         result = 1
         for i in fin_vals:
             result *= i
@@ -36,6 +36,5 @@ class Product(Function):
 
 
 class Neg(Product):
-
     def __init__(self, function: Function):
         super().__init__([Val(-1), function])
