@@ -1,4 +1,5 @@
 from autodiff.functions import Function
+from autodiff.product import Product
 from autodiff.val import Val
 from autodiff.var import Var
 
@@ -20,5 +21,5 @@ class Compose(Function):
 
 
     def differentiate(self, var: Var) -> Function:
-        # Multiply([self.inner.differentiate(), Compose(self.outer.differentiate, self.inner)])
-        pass
+        return Product([self.inner.differentiate(var), Compose(self.outer.differentiate(var), self.inner)])
+    
