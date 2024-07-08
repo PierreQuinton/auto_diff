@@ -1,3 +1,21 @@
 from autodiff.expr import Expr
+from autodiff.val import Val
+from autodiff.var import Var
+
 class Function(Expr):
-    pass
+    def __init__(self, vars: set[Var]) -> None:
+        self.vars = vars
+
+
+    def evaluate(self, values: dict[Var, Val]) -> Val:
+        if values.keys != self.vars:
+            raise ValueError("Wrong keys")
+        self._evaluate(values)
+
+
+    def _evaluate(self, values: dict[Var, Val]) -> Val:
+        raise NotImplementedError
+
+
+    def differentiate(self) -> Expr:
+        raise NotImplementedError
