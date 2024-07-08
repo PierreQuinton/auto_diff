@@ -3,7 +3,7 @@ from autodiff.val import Val
 from autodiff.var import Var
 
 
-class Add(Function):
+class Sum(Function):
     def __init__(self, functions: list[Function]) -> None:
         self.functions = functions
 
@@ -18,5 +18,8 @@ class Add(Function):
 
    
     def differentiate(self, var:Var) -> Function:
-        raise NotImplementedError
-        # Multiply([self.innner.differentiate(), Compose(self.outer.differentiate, self.inner)
+        list_derivatives=[]
+        for function in self.functions :
+            list_derivatives.append(function.differentiate(var))
+           
+        return Sum(list_derivatives)
