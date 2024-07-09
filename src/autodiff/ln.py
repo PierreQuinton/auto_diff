@@ -1,19 +1,29 @@
 from functions import Function, Var, Val
 from product import Product
+from compose import Compose
 from power import Inverse
 import math
 
 
-class Ln(Function):
+class _Ln(Function):
 
-    def __init__(self, var:Var) -> None:
-        self.var=var
-        super().__init__({var})
+    def __init__(self) -> None:
+        self.var = Var("dummy")
+        super().__init__({self.var})
         
 
     def _evaluate(self, values: dict[Var, Val]) -> Val:
-        return Val(math.log(values[self.var]))
+        if self.func(values) > 0:
+            return Val(math.log(self.var(values)))
+        else:
+            raise ValueError("Ln undefined for x <= 0")
  
     
     def differentiate(self, var:Var) -> Function:
-        return Product(Inverse(self.var), self.var.differentiate(var))
+        return Inverse(self.var)
+
+
+class Ln(Compose):
+
+    def __init__(self, func: Function) -> None:
+        super().__init__(func, _Ln)

@@ -29,17 +29,17 @@ class Cos(Compose):
         
 class _Sin(Function):
 
-    def __init__(self, func: Function) -> None:
+    def __init__(self) -> None:
         self.var = Var("dummy")
-        super().__init__({func})
+        super().__init__({self.var})
 
         
     def _evaluate(self, values: dict[Var, Val]) -> Val:
-        return Val(math.sin(self.func(values)))
+        return Val(math.sin(self.var(values)))
 
    
     def differentiate(self, var:Var) -> Function:
-           return Cos(self.func)
+           return Cos(self.var)
 
 
 class Sin(Compose):
