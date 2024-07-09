@@ -3,6 +3,7 @@ from functions import Function, Var, Val
 from sum import Sum
 
 
+
 class Product(Function):
 
     def __init__(self, functions: list[Function]):
@@ -32,16 +33,12 @@ class Product(Function):
         string = """This class handles multiplication and product differentiation"""
 
 
-class Division(Product):
+class Neg(Product):
+    
+    def __init__(self, function: Function):
+        super().__init__([Val(-1), function])
 
-    def __init__(self, numerator: Function, denominator: Function):
+
+
+
         
-        super().__init__()
-    
-
-    def _evaluate(self, values: dict[Var, Val]) -> Val:
-        raise NotImplementedError
-    
-
-    def differentiate(self, var: Var) -> Function:
-        raise NotImplementedError
