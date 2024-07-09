@@ -1,5 +1,6 @@
 from functions import Function, Var, Val
-from product import Product, Neg
+from product import Product
+from neg import Neg
 import math
 
 
@@ -30,7 +31,4 @@ class Sin(Function):
 
    
     def differentiate(self, var:Var) -> Function:
-           if var==self.var:
-                return Cos(var)
-           else:
-                return Val(0.0)
+           return Product(Cos((self.var)), self.var.differentiate(var))

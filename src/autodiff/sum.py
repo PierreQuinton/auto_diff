@@ -13,7 +13,6 @@ class Sum(Function):
             val+=function({var: values[var] for var in function.vars}).val
         return Val(val)
 
-
    
     def differentiate(self, var:Var) -> Function:
         list_derivatives=[]

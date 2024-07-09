@@ -32,16 +32,16 @@ class Product(Function):
         string = """This class handles multiplication and product differentiation"""
 
 
-class Neg(Product):
-    def __init__(self, function: Function):
-        super().__init__([Val(-1), function])
-
-
 class Division(Product):
 
     def __init__(self, numerator: Function, denominator: Function):
         
         super().__init__()
     
+
     def _evaluate(self, values: dict[Var, Val]) -> Val:
-        
+        raise NotImplementedError
+    
+
+    def differentiate(self, var: Var) -> Function:
+        raise NotImplementedError
