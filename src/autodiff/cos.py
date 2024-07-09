@@ -1,12 +1,11 @@
-from autodiff.functions import Function
-from autodiff.val import Val
-from autodiff.var import Var
+from functions import Function, Var, Val
+from product import Product, Neg
+from sin import Sin
 import math
-from autodiff.product import Neg
-from autodiff.sin import Sin
 
 
 class Cos(Function):
+
     def __init__(self, var:Var) -> None:
         self.var=var
         super().__init__({var})
@@ -17,7 +16,4 @@ class Cos(Function):
 
    
     def differentiate(self, var:Var) -> Function:
-        if var==self.var:
-            return Neg(Sin(var))
-        else:
-            return Val(0.0)
+        return Product(Neg(Sin((self.var))), self.var.differentiate(var))

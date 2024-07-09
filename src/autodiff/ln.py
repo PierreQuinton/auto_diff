@@ -1,5 +1,6 @@
 from functions import Function, Var, Val
 from product import Product
+from power import Inverse
 import math
 
 
@@ -15,4 +16,4 @@ class Ln(Function):
  
     
     def differentiate(self, var:Var) -> Function:
-        raise NotImplementedError
+        return Product(Inverse(self.var), self.var.differentiate(var))
