@@ -27,3 +27,4 @@ class Division(Function):
             products.append(Product(functions))
 
         return Sum(products)
+
