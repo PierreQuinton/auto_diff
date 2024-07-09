@@ -1,7 +1,6 @@
 from __future__ import annotations
 from functions import Function, Var, Val
 from sum import Sum
-from compose import Compose
 
 
 class Product(Function):

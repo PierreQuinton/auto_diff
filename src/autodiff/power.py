@@ -3,6 +3,7 @@ from product import Product
 
 
 class Power(Function):
+    
     def __init__(self, base: Function, exp: Function) -> None:
         self.base = base
         self.exp = exp
