@@ -1,8 +1,10 @@
 from __future__ import annotations
-from autodiff.functions import Function
-from autodiff.var import Var
+from functions import Function
+from var import Var
+
 
 class Val(Function):
+
     def __init__(self, val: float) -> None:
         self.val = val
         super().__init__(set())

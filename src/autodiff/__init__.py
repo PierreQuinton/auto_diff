@@ -1,1 +1,1 @@
-from autodiff.functions import Function  # Not used
+from functions import Function  # Not used

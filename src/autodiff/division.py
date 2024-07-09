@@ -1,9 +1,10 @@
-from autodiff.functions import Function
-from autodiff.sum import Sum
 from __future__ import annotations
-from autodiff.compose import Compose
-from autodiff.val import Val
-from autodiff.var import Var
+from functions import Function
+from product import Product
+from sum import Sum
+from compose import Compose
+from val import Val
+from var import Var
 
 
 class Division(Function):
@@ -28,4 +29,3 @@ class Division(Function):
             products.append(Product(functions))
 
         return Sum(products)
-

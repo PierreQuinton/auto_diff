@@ -1,7 +1,7 @@
-from autodiff.functions import Function
-from autodiff.product import Neg
-from autodiff.val import Val
-from autodiff.var import Var
+from functions import Function
+from product import Neg
+from val import Val
+from var import Var
 
 
 class Sum(Function):

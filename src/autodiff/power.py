@@ -1,7 +1,7 @@
-from autodiff.functions import Function
-from autodiff.product import Product
-from autodiff.val import Val
-from autodiff.var import Var
+from functions import Function
+from product import Product
+from val import Val
+from var import Var
 
 
 class Power(Function):
@@ -21,6 +21,8 @@ class Power(Function):
         else:
             raise NotImplementedError("Power rule not implemented for non-constant exponents")
 
+
 class Inverse(Power):
+
     def __init__(self, function: Function) -> None:
         super().__init__(function, Val(-1.0))
