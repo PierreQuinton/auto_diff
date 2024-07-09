@@ -29,15 +29,13 @@ class _Division(Function):
         numerator_diff = Sum([f_prime_g,Neg(f_g_prime)])
         denominator_squared_inverse= Inverse(Power(2,[self.denominator]))
         return Product(numerator_diff, denominator_squared_inverse)
-    
-    
+
 
 class Division(Compose):
 
     def __init__(self, func: Function) -> None:
         super().__init__(func, _Division())
 
-    
 
     def __repr__(self):
         string = """This class handles division and division differentiation"""
