@@ -1,8 +1,5 @@
-from functions import Function
-from product import Neg
-from val import Val
-from var import Var
-
+from functions import Function, Var, Val
+from neg import Neg
 
 class Sum(Function):
     def __init__(self, functions: list[Function]) -> None:

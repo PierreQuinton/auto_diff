@@ -1,9 +1,7 @@
 from __future__ import annotations
-from functions import Function
+from functions import Function, Var, Val
 from sum import Sum
 from compose import Compose
-from val import Val
-from var import Var
 
 
 class Product(Function):
@@ -34,7 +32,3 @@ class Product(Function):
     def __repr__(self):
         string = """This class handles multiplication and product differentiation"""
 
-
-class Neg(Product):
-    def __init__(self, function: Function):
-        super().__init__([Val(-1), function])

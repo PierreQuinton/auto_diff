@@ -1,10 +1,8 @@
 from __future__ import annotations
-from functions import Function
+from functions import Function, Var, Val
 from product import Product
 from sum import Sum
 from compose import Compose
-from val import Val
-from var import Var
 
 
 class Division(Function):
