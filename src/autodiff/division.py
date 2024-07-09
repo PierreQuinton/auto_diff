@@ -1,9 +1,10 @@
 from functions import Function, Var, Val
 from product import Product, Neg
 from sum import Sum
-from power import Power
+from power import Power, Inverse
+from compose import Compose
 
-class Division(Function):
+class _Division(Function):
 
     def __init__(self, numerator: Function, denominator: Function):
         self.numerator = numerator
@@ -26,8 +27,16 @@ class Division(Function):
         f_prime_g = Product([self.numerator.differentiate(var),self.denominator])
         f_g_prime = Product([self.numerator,self.denominator.differentiate(var)])
         numerator_diff = Sum([f_prime_g,Neg(f_g_prime)])
-        denominator_squared = Power(2,[self.denominator])
-        return numerator_diff / denominator_squared
+        denominator_squared_inverse= Inverse(Power(2,[self.denominator]))
+        return Product(numerator_diff, denominator_squared_inverse)
+    
+    
+
+class Division(Compose):
+
+    def __init__(self, func: Function) -> None:
+        super().__init__(func, _Division())
+
     
 
     def __repr__(self):
