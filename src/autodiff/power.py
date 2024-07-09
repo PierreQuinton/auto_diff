@@ -1,5 +1,7 @@
 from functions import Function, Var, Val
 from product import Product
+from sum import Sum
+from ln import Ln
 
 
 class Power(Function):

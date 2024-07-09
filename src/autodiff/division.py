@@ -2,8 +2,13 @@ from functions import Function, Var, Val, Sum, Product
 from neg import Neg
 from power import Power, Inverse
 from compose import Compose
+from functions import Function
+from product import Product
+from power import Inverse
 
-class _Division(Function):
+
+
+class Division(Product):
 
     def __init__(self, numerator: Function, denominator: Function):
         self.numerator = numerator
@@ -34,6 +39,8 @@ class Division(Compose):
 
     def __init__(self, func: Function) -> None:
         super().__init__(func, _Division())
+    def __init__(self, numerator: Function, denominator: Function) -> None:
+        super().__init__(numerator, Inverse(denominator))
 
 
     def __repr__(self):
