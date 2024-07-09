@@ -1,6 +1,5 @@
-from functions import Function, Var, Val
-from product import Product, Neg
-from sum import Sum
+from functions import Function, Var, Val, Sum, Product
+from neg import Neg
 from power import Power, Inverse
 from compose import Compose
 
@@ -22,10 +21,10 @@ class _Division(Function):
 
 
 
-    def differentiate(self, var: Var) -> Function:
+    def _partial(self, var: Var) -> Function:
 # (f'g-fg')/g^2
-        f_prime_g = Product([self.numerator.differentiate(var),self.denominator])
-        f_g_prime = Product([self.numerator,self.denominator.differentiate(var)])
+        f_prime_g = Product([self.numerator._partial(var),self.denominator])
+        f_g_prime = Product([self.numerator,self.denominator._partial(var)])
         numerator_diff = Sum([f_prime_g,Neg(f_g_prime)])
         denominator_squared_inverse= Inverse(Power(2,[self.denominator]))
         return Product(numerator_diff, denominator_squared_inverse)

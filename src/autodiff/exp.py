@@ -15,7 +15,7 @@ class _Exp(Function):
         return Val(math.exp(self.var(values)))
 
 
-    def differentiate(self, var: Var) -> Function:
+    def _partial(self, var: Var) -> Function:
         return self
 
 
