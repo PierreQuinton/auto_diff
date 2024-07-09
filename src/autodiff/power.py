@@ -1,6 +1,4 @@
-from functions import Function, Var, Val
-from product import Product
-from sum import Sum
+from functions import Function, Var, Val, Sum, Product
 from ln import Ln
 
 

@@ -1,5 +1,4 @@
-from functions import Function, Val, Var
-from product import Product
+from functions import Function, Val, Product
 
 
 class Neg(Product):

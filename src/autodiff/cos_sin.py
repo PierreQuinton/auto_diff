@@ -1,7 +1,5 @@
 from functions import Function, Var, Val
-from product import Product
 from neg import Neg
-from compose import Compose
 import math
 
 

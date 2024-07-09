@@ -1,5 +1,4 @@
-from functions import Function, Var, Val
-from product import Product
+from functions import Function, Var, Val, Product
 
 
 class Compose(Function):

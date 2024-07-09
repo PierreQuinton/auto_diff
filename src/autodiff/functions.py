@@ -90,3 +90,40 @@ class Sum(Function):
     
     def _partial(self, func: Function) -> Function:
         return Val(1.0)
+
+
+class Product(Function):
+
+    def __init__(self, functions: list[Function]):
+        self.func_list = []
+
+        for func in functions:
+            if isinstance(func, Product):
+                self.func_list.update(func.functions)  # ISN T IT FUNC_LIST?
+            else:
+                self.func_list.append(func)
+
+        super().__init__(self.func_list)
+
+
+    def _evaluate(self, values: dict[Var, Val]) -> Val:
+        restricted_vals = [{var:values[var] for var in function.vars} for function in self.functions]
+        fin_vals = [function(values).val for values, function in zip(restricted_vals, self.functions)]
+        result = 1
+        for i in fin_vals:
+            result *= i
+        return i
+
+
+    def _partial(self, func: Function) -> Function:
+        products = []
+        for function in self.func_list:
+            if function != func:
+                products.append(function)
+
+        return Product(products)
+
+
+    def __repr__(self):
+        string = """This class handles multiplication and product differentiation"""
+        

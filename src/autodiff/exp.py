@@ -1,25 +1,17 @@
 from functions import Function, Var, Val
-from product import Product
-from compose import Compose
 import math
 
 
 class _Exp(Function):
     
-    def __init__(self, var: Var) -> None:
-        self.var = Var("dummy")
-        super.__init__({var})
+    def __init__(self, func: Function) -> None:
+        self.func = func
+        super.__init__({self.func})
 
 
     def _evaluate(self, values: dict[Var, Val]) -> Val:
-        return Val(math.exp(self.var(values)))
+        return Val(math.exp(self.func(values)))
 
 
-    def _partial(self, var: Var) -> Function:
+    def _partial(self, func: Function) -> Function:
         return self
-
-
-class Exp(Compose):
-
-    def __init__(self, func: Function) -> None:
-        super().__init__(func, _Exp)
