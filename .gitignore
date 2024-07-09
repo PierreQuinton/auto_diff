@@ -1,3 +1,4 @@
 /.pdm-python
 /.venv/
 /.idea
+/src/autodiff/__pycache__
