@@ -1,10 +1,12 @@
-from autodiff.functions import Function
-from autodiff.product import Product
+from functions import Function
+from product import Product
+from val import Val
+from var import Var
 import math
-from autodiff.val import Val
-from autodiff.var import Var
+
 
 class Ln(Function):
+
     def __init__(self, var:Var) -> None:
         self.var=var
         super().__init__({var})

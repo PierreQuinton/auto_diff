@@ -1,8 +1,10 @@
 from __future__ import annotations
-from autodiff.val import Val
-from autodiff.var import Var
+from val import Val
+from var import Var
+
 
 class Function():
+
     def __init__(self, vars: set[Var]) -> None:
         self.vars = vars
 

@@ -1,9 +1,11 @@
-from autodiff.functions import Function
-from autodiff.product import Product
-from autodiff.val import Val
-from autodiff.var import Var
+from functions import Function
+from product import Product
+from val import Val
+from var import Var
+
 
 class Compose(Function):
+
     def __init__(self, inner: Function, outer: Function) -> None:
         self.inner = inner
         self.outer = outer

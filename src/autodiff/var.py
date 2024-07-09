@@ -1,6 +1,6 @@
 from __future__ import annotations
-from autodiff.functions import Function
-from autodiff.val import Val
+from functions import Function
+from val import Val
 
 class Var(Function):
     def __init__(self, name: str) -> None:
