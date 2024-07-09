@@ -1,5 +1,7 @@
 from functions import Function, Var, Val
 from product import Product
+from sum import Sum
+from ln import Ln
 
 
 class Power(Function):
@@ -15,7 +17,9 @@ class Power(Function):
         return Val(base_val.val ** exp_val.val)
 
     def differentiate(self, var: Var) -> Function:
-        if isinstance(self.exp, Val):
+        if  isinstance(self.base, Var) and isinstance(self.exp, Var) :
+            return Product([Power(self.base, self.exp), Sum([Ln(self.base), Val(1)])])
+        elif isinstance(self.exp, Val):
             return Product([self.exp, self.base.differentiate(var), Power(self.base, Val(self.exp.val-1))])
         else:
             raise NotImplementedError("Power rule not implemented for non-constant exponents")
