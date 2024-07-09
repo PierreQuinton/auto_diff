@@ -3,12 +3,13 @@ from __future__ import annotations
 
 class Function():
 
-    def __init__(self, vars: set[Var]) -> None:
-        self.vars = vars
+    def __init__(self, funcs: set[Function]) -> None:
+        self.funcs = funcs
+        self.vars = {var for function in funcs for var in function.funcs}
 
 
     def __apply__(self, values: dict[Var, Val]) -> Val:
-        if values.keys != self.vars:
+        if values.keys != self.funcs:
             raise ValueError("Wrong keys")
         self._evaluate(values)
 
@@ -20,14 +21,23 @@ class Function():
         """
         raise NotImplementedError
 
+    def partial(self, func: Function) -> Function:
+        if func not in self.funcs:
+            raise ValueError("Cannot take partial derivative wrt independent function")
+        return self._partial(func)
 
-    def differentiate(self, var: Var) -> Function:
+    def _partial(self, func: Function) -> Function:
         """
         This raises an error when the program didn't find 
          an differentiation in the already implemented functions.
         """
         raise NotImplementedError
-
+    
+    def differentiate(self, var: Var) -> Function:
+        return Sum([
+            Product([self.partial(func), func.differentiate(var)])
+            for func in self.funcs
+        ])
 
 class Var(Function):
     def __init__(self, name: str) -> None:
@@ -37,8 +47,8 @@ class Var(Function):
     def _evaluate(self, values: dict[Var, Val]) -> Val:
         return values[self]
     
-    def differentiate(self, var: Var) -> Function:
-        if var in self.vars:
+    def _partial(self, var: Var) -> Function:
+        if var in self.funcs:
             return Val(1.0)
         else:
             return Val(0.0)
@@ -54,5 +64,5 @@ class Val(Function):
         return self
 
 
-    def differentiate(self, var: Var) -> Function:
+    def _partial(self, var: Var) -> Function:
         return Val(0.0)

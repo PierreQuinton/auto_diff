@@ -7,17 +7,15 @@ from sum import Sum
 class Product(Function):
 
     def __init__(self, functions: list[Function]):
-        super().__init__({var for function in functions for var in function.vars})
-        
-        self.functions = []
+        funcs = []
 
         for func in functions:
             if isinstance(func, Product):
-                self.functions.update(func.functions)
+                funcs.update(func.functions)
             else:
-                self.functions.append(func)
+                funcs.append(func)
 
-
+        super().__init__(func)
 
 
     def _evaluate(self, values: dict[Var, Val]) -> Val:
@@ -29,7 +27,7 @@ class Product(Function):
         return i
 
 
-    def differentiate(self, var: Var) -> Function:
+    def _partial(self, var: Var) -> Function:
         products = []
         for i, function in enumerate(self.functions):
             functions = self.functions[:i] + [function.differentiate(var)] + self.functions[i+1:]

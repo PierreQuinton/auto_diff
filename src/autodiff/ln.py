@@ -19,7 +19,7 @@ class _Ln(Function):
             raise ValueError("Ln undefined for x <= 0")
  
     
-    def differentiate(self, var:Var) -> Function:
+    def _partial(self, var:Var) -> Function:
         return Inverse(self.var)
 
 
