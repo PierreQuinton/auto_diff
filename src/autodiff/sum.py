@@ -1,7 +1,4 @@
-from functions import Function
-from product import Neg
-from val import Val
-from var import Var
+from functions import Function, Var, Val
 
 
 class Sum(Function):
@@ -24,8 +21,3 @@ class Sum(Function):
             list_derivatives.append(function.differentiate(var))
            
         return Sum(list_derivatives)
-
-
-class Substraction(Sum):
-    def __init__(self, function_1: Function, function_2: Function) -> None:
-        super().__init__([function_1, Neg(function_2)])

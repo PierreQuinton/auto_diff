@@ -1,10 +1,9 @@
-from functions import Function
+from functions import Function, Var, Val
 from product import Product
-from val import Val
-from var import Var
 
 
 class Power(Function):
+    
     def __init__(self, base: Function, exp: Function) -> None:
         self.base = base
         self.exp = exp

@@ -1,7 +1,5 @@
-from functions import Function
+from functions import Function, Var, Val
 from product import Product
-from val import Val
-from var import Var
 
 
 class Compose(Function):
