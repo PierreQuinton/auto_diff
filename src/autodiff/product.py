@@ -8,7 +8,16 @@ class Product(Function):
 
     def __init__(self, functions: list[Function]):
         super().__init__({var for function in functions for var in function.vars})
-        self.functions = functions
+        
+        self.functions = []
+
+        for func in functions:
+            if isinstance(func, Product):
+                self.functions.update(func.functions)
+            else:
+                self.functions.append(func)
+
+
 
 
     def _evaluate(self, values: dict[Var, Val]) -> Val:
