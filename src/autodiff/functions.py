@@ -14,10 +14,18 @@ class Function():
 
 
     def _evaluate(self, values: dict[Var, Val]) -> Val:
+        """
+        This raises an error when the program didn't find 
+         an evalutation in the already implemented functions.
+        """
         raise NotImplementedError
 
 
     def differentiate(self, var: Var) -> Function:
+        """
+        This raises an error when the program didn't find 
+         an differentiation in the already implemented functions.
+        """
         raise NotImplementedError
 
 

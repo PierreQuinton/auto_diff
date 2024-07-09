@@ -8,14 +8,14 @@ class Sum(Function):
         super().__init__({var for function in functions for var in function.vars})
 
     def __apply__(self, values:dict[Var, Val] ) -> Val:
-        val=0.0
+        val = 0.0
         for function in self.functions:
             val+=function({var: values[var] for var in function.vars}).val
         return Val(val)
 
    
     def differentiate(self, var:Var) -> Function:
-        list_derivatives=[]
+        list_derivatives = []
         for function in self.functions :
             list_derivatives.append(function.differentiate(var))
            
