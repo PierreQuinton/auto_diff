@@ -1,34 +1,48 @@
 from functions import Function, Var, Val
 from product import Product
 from neg import Neg
+from compose import Compose
 import math
 
 
-class Cos(Function):
 
-    def __init__(self, var:Var) -> None:
-        self.var=var
-        super().__init__({var})
+class _Cos(Function):
+
+    def __init__(self):
+        self.var = Var("dummy")
+        super().__init__({self.var})
+
+
+    def _evaluate(self, values: dict[Var, Val]) -> Val:
+        return Val(math.cos(self.var(values)))
+
+
+    def differentiate(self, var: Var) -> Function:
+        return Neg(Sin(self.var))
+
+
+class Cos(Compose):
+
+    def __init__(self, func: Function) -> None:
+        super().__init__(func, _Cos())
+
+        
+class _Sin(Function):
+
+    def __init__(self, func: Function) -> None:
+        self.var = Var("dummy")
+        super().__init__({func})
 
         
     def _evaluate(self, values: dict[Var, Val]) -> Val:
-        return Val(math.cos(values[self.var]))
+        return Val(math.sin(self.func(values)))
 
    
     def differentiate(self, var:Var) -> Function:
-        return Product(Neg(Sin((self.var))), self.var.differentiate(var))
-    
+           return Cos(self.func)
 
-class Sin(Function):
 
-    def __init__(self, var:Var) -> None:
-        self.var=var
-        super().__init__({var})
+class Sin(Compose):
 
-        
-    def _evaluate(self, values: dict[Var, Val]) -> Val:
-        return Val(math.sin(values[self.var]))
-
-   
-    def differentiate(self, var:Var) -> Function:
-           return Product(Cos((self.var)), self.var.differentiate(var))
+    def __init__(self, func: Function) -> None:
+        super().__init__(func, _Sin())
