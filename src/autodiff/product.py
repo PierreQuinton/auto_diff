@@ -42,3 +42,6 @@ class Division(Product):
     def __init__(self, numerator: Function, denominator: Function):
         
         super().__init__()
+    
+    def _evaluate(self, values: dict[Var, Val]) -> Val:
+        
