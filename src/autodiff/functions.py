@@ -130,8 +130,3 @@ class Product(Function):
             else:
                 count = 1
         return Product(products)
-
-
-    def __repr__(self):
-        string = """This class handles multiplication and product differentiation"""
-        
