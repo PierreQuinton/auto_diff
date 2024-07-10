@@ -101,6 +101,10 @@ class Var(Function):
 
     def _partial(self, var: Var) -> Function:
         return Val(1.0)
+    
+
+    def __str__(self) -> str:
+        return str(self.name)
 
 
 class Val(Function):
@@ -126,6 +130,10 @@ class Val(Function):
 
     def _partial(self, var: Var) -> Function:
         return Val(0.0)
+    
+
+    def __str__(self) -> str:
+        return str(self.val)
 
 
 def _flatten(functions: list[Function], type: Function) -> Counter[Function]:
@@ -275,3 +283,7 @@ class Ln(Function):
     
     def _partial(self, func: Function) -> Function:
         return Inverse(self.func)
+
+
+    def __str__(self) -> str:
+        return "log(" + self.func.__str__ + ")"
