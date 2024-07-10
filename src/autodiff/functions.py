@@ -125,6 +125,11 @@ class Sum(Function):
         self.func_counter =_flatten(functions, Sum)
         super().__init__(list(self.func_counter.elements()))
 
+
+    def __hash__(self) -> int:
+        return self.func_counter.__hash__()
+
+
     def __eq__(self, other: object) -> bool:
         if isinstance(other, Sum):
             return self.func_counter == other.func_counter
@@ -147,6 +152,10 @@ class Product(Function):
     def __init__(self, functions: Iterable[Function]):
         self.func_counter =_flatten(functions, Product)
         super().__init__(list(self.func_counter))
+
+
+    def __hash__(self) -> int:
+        return self.func_counter.__hash__()
 
 
     def __eq__(self, other: object) -> bool:
