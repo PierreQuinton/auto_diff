@@ -206,6 +206,10 @@ class Sum(Function):
         return Val(1.0)
 
 
+    def __str__(self) -> str:
+        return "+".join(self.func_list)  # Is it func_list?
+
+
 class Product(Function):
 
     def __init__(self, functions: Iterable[Function]):
@@ -240,6 +244,10 @@ class Product(Function):
             else:
                 count = 1
         return Product(products)
+    
+
+    def __str__(self) -> str:
+        return " ".join([f.__str__() for f in self.func_list])  # Is it func_list?
 
 
 class Exp(Function):
@@ -255,6 +263,10 @@ class Exp(Function):
 
     def _partial(self, func: Function) -> Function:
         return self
+    
+
+    def __str__(self) -> str:
+        return "exp("+ self.func.__str__() +")"
 
 
 class Power(Exp):
