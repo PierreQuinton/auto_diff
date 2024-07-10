@@ -1,6 +1,19 @@
-from functions import Function, Var, Val
-from power import Inverse
+from functions import Function, Var, Val, Sum, Product
+from exp import Exp
 import math
+
+
+class Power(Exp):
+
+    def __init__(self, base: Function, exp: Function) -> None:
+        func = Product(Ln(base), exp)
+        super().__init__(func)
+
+
+class Inverse(Power):
+
+    def __init__(self, function: Function) -> None:
+        super().__init__(function, Val(-1.0))
 
 
 class Ln(Function):

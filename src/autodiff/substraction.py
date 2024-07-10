@@ -1,5 +1,4 @@
-from functions import Function
-from sum import Sum
+from functions import Function, Sum
 from neg import Neg
 
 
