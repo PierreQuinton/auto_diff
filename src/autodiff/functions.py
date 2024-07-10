@@ -109,7 +109,7 @@ class Product(Function):
 
     def __init__(self, functions: list[Function]):
 
-
+        func_list =_flatten(functions, Product)
         super().__init__(func_list)
 
 
