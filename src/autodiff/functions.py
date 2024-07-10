@@ -105,15 +105,15 @@ class Sum(Function):
 class Product(Function):
 
     def __init__(self, functions: list[Function]):
-        self.func_list = []
+        func_list = []
 
         for func in functions:
             if isinstance(func, Product):
-                self.func_list.update(func.functions)  # ISN T IT FUNC_LIST?
+                func_list.update(func.functions)  # ISN T IT FUNC_LIST?
             else:
-                self.func_list.append(func)
+                func_list.append(func)
 
-        super().__init__(self.func_list)
+        super().__init__(func_list)
 
 
     def _evaluate(self, values: dict[Var, Val]) -> Val:
