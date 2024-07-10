@@ -1,5 +1,4 @@
-from functions import Function, Product
-from power_ln_inverse import Inverse
+from functions import Function, Product, Inverse
 
 
 class Division(Product):

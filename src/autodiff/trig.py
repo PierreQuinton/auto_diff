@@ -1,7 +1,5 @@
-from functions import Function, Var, Val
+from functions import Function
 from neg import Neg
-import math
-
 
 
 class Cos(Function):
