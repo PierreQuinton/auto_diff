@@ -8,7 +8,7 @@ class Cos(Function):
 
     def __init__(self, func: Function):
         self.func = func
-        super().__init__({self.func})
+        super().__init__([self.func])
 
 
     def _evaluate(self, values: dict[Var, Val]) -> Val:
@@ -23,7 +23,7 @@ class Sin(Function):
 
     def __init__(self, func: Function) -> None:
         self.func = func
-        super().__init__({self.func})
+        super().__init__([self.func])
 
         
     def _evaluate(self, values: dict[Var, Val]) -> Val:
@@ -32,4 +32,3 @@ class Sin(Function):
    
     def _partial(self, func: Function) -> Function:
            return Cos(self.func)
-

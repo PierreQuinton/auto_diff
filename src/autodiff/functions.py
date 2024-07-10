@@ -145,8 +145,14 @@ class Sum(Function):
 class Product(Function):
 
     def __init__(self, functions: Iterable[Function]):
-        self.func_list =_flatten(functions, Product)
-        super().__init__(set(self.func_list))
+        self.func_counter =_flatten(functions, Product)
+        super().__init__(list(self.func_counter))
+
+
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, Product):
+            return self.func_counter == other.func_counter
+        return False
 
 
     def _evaluate(self, values: dict[Var, Val]) -> Val:
@@ -161,7 +167,7 @@ class Product(Function):
     def _partial(self, func: Function) -> Function:
         products = []
         count = 0
-        for function in self.func_list:
+        for function in self.func_counter:
             if function != func and not count:
                 products.append(function)
             else:
