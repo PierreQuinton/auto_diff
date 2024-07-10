@@ -77,18 +77,21 @@ class Val(Function):
         return Val(0.0)
 
 
-class Sum(Function):
-
-    def __init__(self, functions: list[Function]) -> None:
-        funcs = []
-
-        for func in functions:
-            if isinstance(func, Sum):
+def _flatten(functions:list[Function], type:Function):
+    funcs = []
+    for func in functions:
+            if isinstance(func, type):
                 funcs.update(func.functions)
             else:
                 funcs.append(func)
+    return funcs
 
-        super().__init__(funcs)
+class Sum(Function):
+
+    def __init__(self, functions: list[Function]) -> None:
+        
+        func_list =_flatten(functions, Sum)
+        super().__init__(func_list)
 
 
     def _evaluate(self, values:dict[Var, Val] ) -> Val:
@@ -105,15 +108,9 @@ class Sum(Function):
 class Product(Function):
 
     def __init__(self, functions: list[Function]):
-        self.func_list = []
+        func_list = _flatten(functions, Product)
 
-        for func in functions:
-            if isinstance(func, Product):
-                self.func_list.update(func.functions)  # ISN T IT FUNC_LIST?
-            else:
-                self.func_list.append(func)
-
-        super().__init__(self.func_list)
+        super().__init__(func_list)
 
 
     def _evaluate(self, values: dict[Var, Val]) -> Val:
