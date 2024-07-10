@@ -42,7 +42,7 @@ class Function():
 class Var(Function):
     def __init__(self, name: str) -> None:
         self.name = name
-        super().__init__(set(self))
+        super().__init__({self})
     
     def _evaluate(self, values: dict[Var, Val]) -> Val:
         return values[self]

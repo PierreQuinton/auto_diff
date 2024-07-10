@@ -32,3 +32,4 @@ class Sin(Function):
    
     def _partial(self, func: Function) -> Function:
            return Cos(self.func)
+
