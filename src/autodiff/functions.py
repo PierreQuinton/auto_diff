@@ -1,9 +1,12 @@
 from __future__ import annotations
+from collections import Counter
+
+from typing import Iterable
 
 
 class Function():
 
-    def __init__(self, funcs: set[Function]) -> None:
+    def __init__(self, funcs: list[Function]) -> None:
         self.funcs = funcs
         self.vars = {var for function in funcs for var in function.funcs}
 
@@ -33,6 +36,18 @@ class Function():
         """
         raise NotImplementedError
     
+    def _list_representation(self) -> list[type | Function]:
+        return [self.__class__] + self.funcs
+    
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, Function):
+            return self._list_representation() == other._list_representation()
+        return False
+    
+    def __hash__(self) -> int:
+        return self._list_representation().__hash__()
+            
+    
     def differentiate(self, var: Var) -> Function:
         return Sum([
             Product([self.partial(func), func.differentiate(var)])
@@ -45,7 +60,14 @@ class Var(Function):
     def __init__(self, name: str) -> None:
         self.name = name
         super().__init__({self})
-    
+        
+    def __hash__(self) -> int:
+        return self.name.__hash__()
+
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, Var):
+            return self.name == other.name
+        return False
     
     def _evaluate(self, values: dict[Var, Val]) -> Val:
         return values[self]
@@ -70,11 +92,12 @@ class Val(Function):
 
 
     def __hash__(self) -> int:
-            return self.val.__hash__()
-    
-    def __eq__(self, value: object) -> bool:
-        if isinstance(self, value):
-            return self.val == value.val
+        return self.val.__hash__()
+
+
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, Val):
+            return self.val == other.val
         return False
 
 
@@ -86,26 +109,31 @@ class Val(Function):
         return Val(0.0)
 
 
-def _flatten(functions: list[Function], type: Function) -> list[Function]:
-    funcs = []
+def _flatten(functions: list[Function], type: Function) -> Counter[Function]:
+    funcs = Counter()
     for func in functions:
             if isinstance(func, type):
-                funcs.update(func.functions)
+                funcs.update(func.func_counter)
             else:
-                funcs.append(func)
+                funcs.update([func])
     return funcs
 
 
 class Sum(Function):
 
-    def __init__(self, functions: list[Function]) -> None:
-        self.func_list =_flatten(functions, Sum)
-        super().__init__(set(self.func_list))
+    def __init__(self, functions: Iterable[Function]) -> None:
+        self.func_counter =_flatten(functions, Sum)
+        super().__init__(list(self.func_counter.elements()))
+
+    def __eq__(self, other: object) -> bool:
+        if isinstance(other, Sum):
+            return self.func_counter == other.func_counter
+        return False
 
 
     def _evaluate(self, values:dict[Var, Val] ) -> Val:
         val = 0.0
-        for function in self.func_list:
+        for function in self.func_counter:
             val += function({var: values[var] for var in function.vars}).val
         return Val(val)
 
@@ -116,7 +144,7 @@ class Sum(Function):
 
 class Product(Function):
 
-    def __init__(self, functions: list[Function]):
+    def __init__(self, functions: Iterable[Function]):
         self.func_list =_flatten(functions, Product)
         super().__init__(set(self.func_list))
 
