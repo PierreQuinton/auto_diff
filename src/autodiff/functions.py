@@ -16,6 +16,12 @@ class Function():
         self._evaluate(values)
 
 
+    def substitute(self, substitutions: dict[Function, Function]) -> Function:
+        if self in substitutions:
+            return substitutions[self]
+        return self._substitute(substitutions)
+
+
     def _evaluate(self, values: dict[Var, Val]) -> Val:
         """
         This raises an error when the program didn't find 
@@ -23,10 +29,12 @@ class Function():
         """
         raise NotImplementedError
 
+
     def partial(self, func: Function) -> Function:
         if func not in self.funcs:
             raise ValueError("Cannot take partial derivative wrt independent function")
         return self._partial(func)
+
 
     def _partial(self, func: Function) -> Function:
         """
@@ -35,14 +43,17 @@ class Function():
         """
         raise NotImplementedError
     
+
     def _list_representation(self) -> list[type | Function]:
         return [self.__class__] + self.funcs
     
+
     def __eq__(self, other: object) -> bool:
         if isinstance(other, Function):
             return self._list_representation() == other._list_representation()
         return False
     
+
     def __hash__(self) -> int:
         return self._list_representation().__hash__()
 
@@ -70,6 +81,10 @@ class Var(Function):
     
     def _evaluate(self, values: dict[Var, Val]) -> Val:
         return values[self]
+    
+
+    def substitute(self, substitutions: dict[Function, Function]) -> Function:
+        return substitutions[self]
     
 
     def differentiate(self, var: Var) -> Function:
