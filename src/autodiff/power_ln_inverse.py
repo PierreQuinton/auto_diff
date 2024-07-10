@@ -1,4 +1,4 @@
-from functions import Function, Var, Val, Sum, Product
+from functions import Function, Val, Product
 from exp import Exp
 import math
 

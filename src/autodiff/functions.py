@@ -1,7 +1,7 @@
 from __future__ import annotations
 from collections import Counter
 
-from typing import Iterable, Callable
+from typing import Iterable
 
 
 class Function():
