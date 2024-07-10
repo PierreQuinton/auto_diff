@@ -91,7 +91,7 @@ class Sum(Function):
         super().__init__(funcs)
 
 
-    def __apply__(self, values:dict[Var, Val] ) -> Val:
+    def _evaluate(self, values:dict[Var, Val] ) -> Val:
         val = 0.0
         for function in self.functions:
             val += function({var: values[var] for var in function.vars}).val
