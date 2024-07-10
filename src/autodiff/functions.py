@@ -52,7 +52,7 @@ class Var(Function):
     
 
     def differentiate(self, var: Var) -> Function:
-        if self.name == var:
+        if self == var:
             return Val(1.0)
         else:
             return Val(0.0)
@@ -67,6 +67,15 @@ class Val(Function):
     def __init__(self, val: float) -> None:
         self.val = val
         super().__init__(set())
+
+
+    def __hash__(self) -> int:
+            return self.val.__hash__()
+    
+    def __eq__(self, value: object) -> bool:
+        if isinstance(self, value):
+            return self.val == value.val
+        return False
 
 
     def _evaluate(self, values: dict[Var, Val]) -> Val:
