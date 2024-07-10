@@ -77,7 +77,7 @@ class Val(Function):
         return Val(0.0)
 
 
-def _flatten(functions:list[Function], type:Function):
+def _flatten(functions: list[Function], type: Function) -> list[Function]:
     funcs = []
     for func in functions:
             if isinstance(func, type):
@@ -86,17 +86,17 @@ def _flatten(functions:list[Function], type:Function):
                 funcs.append(func)
     return funcs
 
+
 class Sum(Function):
 
     def __init__(self, functions: list[Function]) -> None:
-        
-        func_list =_flatten(functions, Sum)
-        super().__init__(func_list)
+        self.func_list =_flatten(functions, Sum)
+        super().__init__(set(self.func_list))
 
 
     def _evaluate(self, values:dict[Var, Val] ) -> Val:
         val = 0.0
-        for function in self.functions:
+        for function in self.func_list:
             val += function({var: values[var] for var in function.vars}).val
         return Val(val)
 
@@ -108,9 +108,8 @@ class Sum(Function):
 class Product(Function):
 
     def __init__(self, functions: list[Function]):
-
-        func_list =_flatten(functions, Product)
-        super().__init__(func_list)
+        self.func_list =_flatten(functions, Product)
+        super().__init__(set(self.func_list))
 
 
     def _evaluate(self, values: dict[Var, Val]) -> Val:
@@ -124,10 +123,12 @@ class Product(Function):
 
     def _partial(self, func: Function) -> Function:
         products = []
+        count = 0
         for function in self.func_list:
-            if function != func:
+            if function != func and not count:
                 products.append(function)
-
+            else:
+                count = 1
         return Product(products)
 
 
