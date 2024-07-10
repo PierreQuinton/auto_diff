@@ -39,19 +39,27 @@ class Function():
             for func in self.funcs
         ])
 
+
 class Var(Function):
+    
     def __init__(self, name: str) -> None:
         self.name = name
         super().__init__(set(self))
     
+    
     def _evaluate(self, values: dict[Var, Val]) -> Val:
         return values[self]
     
-    def _partial(self, var: Var) -> Function:
-        if var in self.funcs:
+
+    def differentiate(self, var: Var) -> Function:
+        if self.name == var:
             return Val(1.0)
         else:
             return Val(0.0)
+
+
+    def _partial(self, var: Var) -> Function:
+        return Val(1.0)
 
 
 class Val(Function):
@@ -59,7 +67,8 @@ class Val(Function):
     def __init__(self, val: float) -> None:
         self.val = val
         super().__init__(set())
-    
+
+
     def _evaluate(self, values: dict[Var, Val]) -> Val:
         return self
 
@@ -69,6 +78,7 @@ class Val(Function):
 
 
 class Sum(Function):
+
     def __init__(self, functions: list[Function]) -> None:
         funcs = []
 
