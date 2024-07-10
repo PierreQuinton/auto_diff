@@ -1,7 +1,7 @@
 from __future__ import annotations
 from collections import Counter
 
-from typing import Iterable
+from typing import Iterable, cast
 
 
 class Function():
@@ -14,6 +14,10 @@ class Function():
     #     if values.keys != self.funcs:
     #         raise ValueError("Wrong keys")
     #     self._substitute(values)
+
+
+    def simplify(self) -> Function:
+        raise NotImplementedError
 
 
     def substitute(self, substitutions: dict[Function, Function]) -> Function:
@@ -137,7 +141,8 @@ class Sum(Function):
 
     def __init__(self, functions: Iterable[Function]) -> None:
         self.func_counter =_flatten(functions, Sum)
-        super().__init__(list(self.func_counter.elements()))
+        self.func_list = list(self.func_counter.elements())
+        super().__init__(self.func_list)
 
 
     def __hash__(self) -> int:
@@ -150,12 +155,39 @@ class Sum(Function):
         return False
 
 
-    def _evaluate(self, values:dict[Var, Val] ) -> Val:
-        val = 0.0
-        for function in self.func_counter:
-            val += function({var: values[var] for var in function.vars}).val
-        return Val(val)
-    
+    def simplify(self) -> Function:
+        funcs = []
+        for func in self.func_counter:
+            funcs += [func.simplify()] * self.func_counter[func]
+        non_val_funcs = []
+        func_dict = dict()
+        for func in funcs:
+            if isinstance(func, Val):
+                term = Product([])
+                val = func.val
+            else:
+                if not isinstance(func, Product):
+                    term = Product([func])
+                    val = 1.0
+                elif not isinstance(func.funcs[0], Val):
+                    term = Product(func.funcs)
+                    val = 1.0
+                else:
+                    term = Product(func.funcs[1:])
+                    val = func.funcs[0].val
+            if term in func_dict:
+                func_dict[term] += val
+            else:
+                func_dict[term] = val
+
+        funcs = [Product([Val(val), *cast(Product, term).funcs]).simplify() for term, val in func_dict.items()]
+
+        if len(funcs) == 0:
+            return Val(0.0)
+        if len(funcs) == 1:
+            return funcs[0]
+        return Sum(funcs)
+
     def _substitute(self, substitutions: dict[Function, Function]) -> Function:
         funcs = []
         for func in self.func_counter:
@@ -170,7 +202,8 @@ class Product(Function):
 
     def __init__(self, functions: Iterable[Function]):
         self.func_counter =_flatten(functions, Product)
-        super().__init__(list(self.func_counter))
+        self.func_list = list(self.func_counter.elements())
+        super().__init__(self.func_list)
 
 
     def __hash__(self) -> int:
