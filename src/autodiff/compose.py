@@ -11,7 +11,7 @@ class Compose(Function):
         if len(self.outer.funcs) != 1:
             raise ValueError("Expected only one argument")
         
-        self.outer_var = list(self.outer.funcs)[0]
+        self.outer_var = self.outer.funcs[0]
 
 
     def _evaluate(self, values: dict[Var, Val]) -> Val:

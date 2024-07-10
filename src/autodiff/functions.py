@@ -8,7 +8,6 @@ class Function():
 
     def __init__(self, funcs: list[Function]) -> None:
         self.funcs = funcs
-        self.vars = {var for function in funcs for var in function.funcs}
 
 
     def __apply__(self, values: dict[Var, Val]) -> Val:
@@ -46,7 +45,7 @@ class Function():
     
     def __hash__(self) -> int:
         return self._list_representation().__hash__()
-            
+
     
     def differentiate(self, var: Var) -> Function:
         return Sum([
