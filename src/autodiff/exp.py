@@ -2,7 +2,7 @@ from functions import Function, Var, Val
 import math
 
 
-class _Exp(Function):
+class Exp(Function):
     
     def __init__(self, func: Function) -> None:
         self.func = func
