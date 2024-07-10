@@ -11,8 +11,8 @@ class Cos(Function):
         super().__init__([self.func])
 
 
-    def _evaluate(self, values: dict[Var, Val]) -> Val:
-        return Val(math.cos(self.func(values)))
+    def _substitute(self, substitutions: dict[Function, Function]) -> Function:
+        return Cos(self.func.substitute(substitutions))
 
 
     def _partial(self, func: Function) -> Function:
@@ -26,8 +26,8 @@ class Sin(Function):
         super().__init__([self.func])
 
         
-    def _evaluate(self, values: dict[Var, Val]) -> Val:
-        return Val(math.sin(self.func(values)))
+    def _substitute(self, substitutions: dict[Function, Function]) -> Function:
+        return Sin(self.func.substitute(substitutions))
 
    
     def _partial(self, func: Function) -> Function:

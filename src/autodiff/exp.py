@@ -9,8 +9,8 @@ class Exp(Function):
         super.__init__([self.func])
 
 
-    def _evaluate(self, values: dict[Var, Val]) -> Val:
-        return Val(math.exp(self.func(values)))
+    def _substitute(self, substitutions: dict[Function, Function]) -> Function:
+        return Exp(self.func.substitute(substitutions))
 
 
     def _partial(self, func: Function) -> Function:

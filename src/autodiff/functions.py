@@ -1,7 +1,7 @@
 from __future__ import annotations
 from collections import Counter
 
-from typing import Iterable
+from typing import Iterable, Callable
 
 
 class Function():
@@ -10,16 +10,20 @@ class Function():
         self.funcs = funcs
 
 
-    def __apply__(self, values: dict[Var, Val]) -> Val:
-        if values.keys != self.funcs:
-            raise ValueError("Wrong keys")
-        self._evaluate(values)
+    # def __apply__(self, values: dict[Var, Val]) -> Val:
+    #     if values.keys != self.funcs:
+    #         raise ValueError("Wrong keys")
+    #     self._substitute(values)
 
 
     def substitute(self, substitutions: dict[Function, Function]) -> Function:
         if self in substitutions:
             return substitutions[self]
         return self._substitute(substitutions)
+
+
+    def _substitute(self, substitutions: dict[Function, Function]) -> Function:
+        raise NotImplementedError
 
 
     def _evaluate(self, values: dict[Var, Val]) -> Val:
@@ -79,13 +83,10 @@ class Var(Function):
             return self.name == other.name
         return False
     
-    def _evaluate(self, values: dict[Var, Val]) -> Val:
-        return values[self]
-    
 
-    def substitute(self, substitutions: dict[Function, Function]) -> Function:
-        return substitutions[self]
-    
+    def _substitute(self, substitutions: dict[Function, Function]) -> Function:
+        return self
+
 
     def differentiate(self, var: Var) -> Function:
         if self == var:
@@ -115,7 +116,7 @@ class Val(Function):
         return False
 
 
-    def _evaluate(self, values: dict[Var, Val]) -> Val:
+    def _substitute(self, substitutions: dict[Function, Function]) -> Function:
         return self
 
 
@@ -131,7 +132,6 @@ def _flatten(functions: list[Function], type: Function) -> Counter[Function]:
             else:
                 funcs.update([func])
     return funcs
-
 
 class Sum(Function):
 
@@ -155,7 +155,12 @@ class Sum(Function):
         for function in self.func_counter:
             val += function({var: values[var] for var in function.vars}).val
         return Val(val)
-
+    
+    def _substitute(self, substitutions: dict[Function, Function]) -> Function:
+        funcs = []
+        for func in self.func_counter:
+            funcs += [func.substitute(substitutions)] * self.func_counter[func]
+        return Sum(funcs)
     
     def _partial(self, func: Function) -> Function:
         return Val(1.0)
@@ -178,13 +183,11 @@ class Product(Function):
         return False
 
 
-    def _evaluate(self, values: dict[Var, Val]) -> Val:
-        restricted_vals = [{var:values[var] for var in function.vars} for function in self.functions]
-        fin_vals = [function(values).val for values, function in zip(restricted_vals, self.functions)]
-        result = 1
-        for i in fin_vals:
-            result *= i
-        return i
+    def _substitute(self, substitutions: dict[Function, Function]) -> Function:
+        funcs = []
+        for func in self.func_counter:
+            funcs += [func.substitute(substitutions)] * self.func_counter[func]
+        return Product(funcs)
 
 
     def _partial(self, func: Function) -> Function:
