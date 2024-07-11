@@ -198,6 +198,7 @@ class Sum(Function):
     def simplify(self) -> Function:
         funcs = []
         for func in self.func_counter:
+            print(func.simplify())
             funcs += [func.simplify()] * self.func_counter[func]
         monomials = dict()
         for func in funcs:
@@ -320,6 +321,19 @@ class Neg(Product):
     def __init__(self, function: Function):
         super().__init__([Val(-1), function])
         self.function = function
+
+def simplify(self) -> Function:  # DOESN'T WORK INSIDE SUM
+        func = self.function.simplify()
+        if isinstance(func, Val):
+            if func.val == 0.0:
+                return func
+            return Val(-func.val)
+        elif isinstance(func, Neg):
+            return func.function
+        return Neg(func)
+
+    # def __str__(self) -> str:
+    #     return "-" + self.function.__str__()
 
 
 class Exp(Function):
