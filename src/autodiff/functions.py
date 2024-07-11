@@ -188,6 +188,7 @@ class Sum(Function):
                 monomials[terms] = val
 
         funcs = [Product([Val(val), *terms]).simplify() for terms, val in monomials.items()]
+        funcs = [func for func in funcs if func is not Val(0.0)]
 
         if len(funcs) == 0:
             return Val(0.0)
