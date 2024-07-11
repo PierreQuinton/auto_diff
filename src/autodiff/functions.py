@@ -313,7 +313,7 @@ class Division(Product):
 
     def __str__(self) -> str:
         return "(" + self.numerator.__str__() + ")" + "/" + "(" + self.denominator.__str__() + ")"
-
+    
 
 class Neg(Product):
 
@@ -387,6 +387,15 @@ class Power(Exp):
 
     def __str__(self) -> str:
         return "(" + self.base.__str__() + ")" + "^" + "(" + self.exp.__str__() + ")"
+    
+    
+    def simplify(self) -> Function:
+        func = self.func.simplify()
+        if isinstance(func, Val):
+            return Val(math.exp(func.val))
+        elif isinstance(func, Power):
+            return func.func
+        return Power(func)
 
 
 class Inverse(IntegerPower):

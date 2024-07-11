@@ -1,8 +1,8 @@
 from autodiff import Var, Cos, Ln, Exp, Val
 
 x = Var("x")
-f = Cos(3 * x - Ln(x ** 2 + 1) / Exp(x + x))
 f = x+x
+f = Cos(3**2*x)
 f2 = f.differentiate(x)
 
 print(f)
