@@ -1,4 +1,4 @@
-from autodiff import Var, Cos, Ln, Exp, Val, Neg
+from autodiff import Var, Cos, Ln, Exp, Val
 
 x = Var("x")
 y = Var("y")
