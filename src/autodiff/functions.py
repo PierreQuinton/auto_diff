@@ -67,8 +67,12 @@ class Function:
 
     
     def differentiate(self, var: Var) -> Function:
+        simplified_self = self.simplify()
+        return simplified_self._differentiate(var).simplify()
+
+    def _differentiate(self, var: Var) -> Function:
         return Sum([
-            Product([self.partial(func), func.differentiate(var)])
+            Product([self.partial(func), func._differentiate(var)])
             for func in self.funcs
         ])
     
@@ -146,7 +150,7 @@ class Var(Function):
         return self
 
 
-    def differentiate(self, var: Var) -> Function:
+    def _differentiate(self, var: Var) -> Function:
         if self == var:
             return Val(1.0)
         else:
@@ -158,7 +162,10 @@ class Var(Function):
     
 
     def __str__(self) -> str:
-        return str(self.name)  # DO WE HAVE TO CHECK self.val ???
+        return str(self.name)
+    
+    def simplify(self) -> Function:
+        return self
 
 
 class Val(Function):
@@ -188,6 +195,9 @@ class Val(Function):
 
     def __str__(self) -> str:
         return str(self.val)
+    
+    def simplify(self) -> Function:
+        return self
 
 
 def _flatten(functions: Iterable[Function], t: type) -> Counter[Function]:
