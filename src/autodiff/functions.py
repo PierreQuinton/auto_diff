@@ -234,17 +234,17 @@ class Sum(Function):
         monomials = dict()
         for func in funcs:
             if isinstance(func, Val):
-                terms = []
+                terms = tuple()
                 val = func.val
             else:
                 if not isinstance(func, Product):
-                    terms = [func]
+                    terms = (func, )
                     val = 1.0
                 elif isinstance(func.funcs[0], Val):
-                    terms = func.funcs[1:]
+                    terms = tuple(func.funcs[1:])
                     val = func.funcs[0].val
                 else:
-                    terms = func.funcs
+                    terms = tuple(func.funcs)
                     val = 1.0
             if terms in monomials:
                 monomials[terms] += val
