@@ -149,8 +149,8 @@ class Sum(Function):
 
     def __init__(self, functions: Iterable[Function]) -> None:
         self.func_counter =_flatten(functions, Sum)
-        self.func_list = list(self.func_counter.elements())
-        super().__init__(self.func_list)
+        self.funcs = list(self.func_counter.elements())
+        super().__init__(self.funcs)
 
 
     def __hash__(self) -> int:
@@ -167,7 +167,7 @@ class Sum(Function):
         funcs = []
         for func in self.func_counter:
             funcs += [func.simplify()] * self.func_counter[func]
-        non_val_funcs = []
+        non_val_funcs = []  # Used?
         func_dict = dict()
         for func in funcs:
             if isinstance(func, Val):
@@ -207,7 +207,7 @@ class Sum(Function):
 
 
     def __str__(self) -> str:
-        return "+".join(self.func_list)  # Is it func_list?
+        return "+".join(self.funcs)
 
 
 class Product(Function):
