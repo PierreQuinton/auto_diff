@@ -202,6 +202,8 @@ class Sum(Function):
         monomials = dict()
         for func in funcs:
             if isinstance(func, Val):
+                if func.val == 0.0:
+                    continue
                 terms = tuple()
                 val = func.val
             else:
@@ -315,7 +317,7 @@ class Division(Product):
 
     def __str__(self) -> str:
         return "(" + self.numerator.__str__() + ")" + "/" + "(" + self.denominator.__str__() + ")"
-    
+
     def simplify(self) -> Function:
         denominator = self.denominator.simplify()
         numerator = self.numerator.simplify()
@@ -323,7 +325,8 @@ class Division(Product):
             return numerator
         elif numerator == Val(1.0):
             return Inverse(denominator)
-        return Division(denominator,numerator)
+        return Division(denominator, numerator)
+
 
 class Neg(Product):
 
@@ -331,18 +334,20 @@ class Neg(Product):
         super().__init__([Val(-1), function])
         self.function = function
 
-def simplify(self) -> Function:  # DOESN'T WORK INSIDE SUM
-        func = self.function.simplify()
-        if isinstance(func, Val):
-            if func.val == 0.0:
-                return func
-            return Val(-func.val)
-        elif isinstance(func, Neg):
-            return func.function
-        return Neg(func)
 
-    # def __str__(self) -> str:
-    #     return "-" + self.function.__str__()
+def simplify(self) -> Function:  # DOESN'T WORK INSIDE SUM
+    func = self.function.simplify()
+    if isinstance(func, Val):
+        if func.val == 0.0:
+            return func
+        return Val(-func.val)
+    elif isinstance(func, Neg):
+        return func.function
+    return Neg(func)
+
+
+# def __str__(self) -> str:
+#     return "-" + self.function.__str__()
 
 
 class Exp(Function):
@@ -410,8 +415,7 @@ class Power(Exp):
 
     def __str__(self) -> str:
         return "(" + self.base.__str__() + ")" + "^" + "(" + self.exp.__str__() + ")"
-    
-    
+
     def simplify(self) -> Function:
         func = self.func.simplify()
         if isinstance(func, Val):
