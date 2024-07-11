@@ -15,6 +15,10 @@ class Cos(Function):
 
     def _partial(self, func: Function) -> Function:
         return Neg(Sin(self.func))
+    
+
+    def __str__(self) -> str:
+        return "cos(" + self.func.__str__() + ")"
 
         
 class Sin(Function):
@@ -30,3 +34,7 @@ class Sin(Function):
    
     def _partial(self, func: Function) -> Function:
            return Cos(self.func)
+
+
+    def __str__(self) -> str:
+        return "sin(" + self.func.__str__() + ")"

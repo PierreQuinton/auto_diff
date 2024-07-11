@@ -78,9 +78,11 @@ class Var(Function):
     def __init__(self, name: str) -> None:
         self.name = name
         super().__init__({self})
-        
+
+
     def __hash__(self) -> int:
         return self.name.__hash__()
+
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, Var):
@@ -104,7 +106,7 @@ class Var(Function):
     
 
     def __str__(self) -> str:
-        return str(self.name)
+        return str(self.name)  # DO WE HAVE TO CHECK self.val ???
 
 
 class Val(Function):
@@ -196,18 +198,20 @@ class Sum(Function):
             return funcs[0]
         return Sum(funcs)
 
+
     def _substitute(self, substitutions: dict[Function, Function]) -> Function:
         funcs = []
         for func in self.func_counter:
             funcs += [func.substitute(substitutions)] * self.func_counter[func]
         return Sum(funcs)
-    
+
+
     def _partial(self, func: Function) -> Function:
         return Val(1.0)
 
 
     def __str__(self) -> str:
-        return "+".join(self.funcs)
+        return "+".join(self.funcs.__str__())
 
 
 class Product(Function):
@@ -247,7 +251,7 @@ class Product(Function):
     
 
     def __str__(self) -> str:
-        return " ".join([f.__str__() for f in self.func_list])  # Is it func_list?
+        return "⋅".join([f.__str__() for f in self.func_list])  # Is it func_list?
 
 
 class Exp(Function):
@@ -272,8 +276,14 @@ class Exp(Function):
 class Power(Exp):
 
     def __init__(self, base: Function, exp: Function) -> None:
-        func = Product(Ln(base), exp)
+        self.base = base
+        self.exp = exp
+        func = Product([Ln(base), exp])
         super().__init__(func)
+
+    
+    def __str__(self) -> str:
+        return "("+self.base.__str__+")"+"^"+"("+self.exp.__str__+")"
 
 
 class Inverse(Power):
@@ -298,4 +308,4 @@ class Ln(Function):
 
 
     def __str__(self) -> str:
-        return "log(" + self.func.__str__ + ")"
+        return "log(" + self.func.__str__() + ")"
