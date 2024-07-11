@@ -1,5 +1,4 @@
-from functions import Function
-from neg import Neg
+from functions import Function, Neg
 
 
 class Cos(Function):
@@ -38,3 +37,4 @@ class Sin(Function):
 
     def __str__(self) -> str:
         return "sin(" + self.func.__str__() + ")"
+    

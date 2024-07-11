@@ -36,7 +36,7 @@ class Function():
          an evalutation in the already implemented functions.
         """
         raise NotImplementedError
-
+    
 
     def partial(self, func: Function) -> Function:
         if func not in self.funcs:
@@ -214,12 +214,17 @@ class Sum(Function):
         return "+".join(self.funcs.__str__())
 
 
+class Substraction(Sum):
+
+    def __init__(self, function_1: Function, function_2: Function) -> None:
+        super().__init__([function_1, Neg(function_2)])
+
+
 class Product(Function):
 
     def __init__(self, functions: Iterable[Function]):
         self.func_counter =_flatten(functions, Product)
-        self.func_list = list(self.func_counter.elements())
-        super().__init__(self.func_list)
+        super().__init__(list(self.func_counter.elements()))
 
 
     def __hash__(self) -> int:
@@ -275,7 +280,25 @@ class Product(Function):
     
 
     def __str__(self) -> str:
-        return "⋅".join([f.__str__() for f in self.func_list])  # Is it func_list?
+        return "("+")⋅(".join([f.__str__() for f in self.funcs])+")"
+
+
+class Division(Product):
+
+    def __init__(self, numerator: Function, denominator: Function) -> None:
+        self.numerator = numerator
+        self.denominator = denominator
+        super().__init__(numerator, Inverse(denominator))
+
+
+    def __str__(self) -> str:
+        return "("+self.numerator.__str__()+")"+"/"+"("+self.denominator.__str__()+")"
+
+
+class Neg(Product):
+    
+    def __init__(self, function: Function):
+        super().__init__([Val(-1), function])
 
 
 class Exp(Function):
@@ -297,6 +320,25 @@ class Exp(Function):
         return "exp("+ self.func.__str__() +")"
 
 
+class IntegerPower(Function):
+
+    def __init__(self, base: Function, exp: int) -> None:
+        self.exp = exp
+        self.base = base
+        super().__init__([base])
+
+
+    def _substitute(self, substitutions: dict[Function, Function]) -> Function:
+        return IntegerPower(self.base.substitute(substitutions), self.exp)
+
+
+    def _partial(self, func: Function) -> Function:
+        return Product([Val(float(self.exp)), IntegerPower(self.base, self.exp - 1)])
+    
+
+    def __str__(self) -> str:
+        return "("+self.base.__str__+")"+"^"+str(self.exp)
+
 class Power(Exp):
 
     def __init__(self, base: Function, exp: Function) -> None:
@@ -304,18 +346,16 @@ class Power(Exp):
         self.exp = exp
         func = Product([Ln(base), exp])
         super().__init__(func)
-        self.base = base
-        self.exp = exp
 
     
     def __str__(self) -> str:
         return "("+self.base.__str__+")"+"^"+"("+self.exp.__str__+")"
 
 
-class Inverse(Power):
+class Inverse(IntegerPower):
 
     def __init__(self, function: Function) -> None:
-        super().__init__(function, Val(-1.0))
+        super().__init__(function, -1)
 
 
 class Ln(Function):
