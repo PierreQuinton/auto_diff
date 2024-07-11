@@ -4,10 +4,10 @@ from typing import Iterable
 import math
 
 
-class Function():
+class Function:
 
-    def __init__(self, funcs: list[Function]) -> None:
-        self.funcs = funcs
+    def __init__(self, funcs: Iterable[Function]) -> None:
+        self.funcs = tuple(funcs)
 
 
     # def __apply__(self, values: dict[Var, Val]) -> Val:
@@ -52,8 +52,8 @@ class Function():
         raise NotImplementedError
     
 
-    def _list_representation(self) -> list[type | Function]:
-        return [self.__class__] + self.funcs
+    def _list_representation(self) -> tuple[str | Function]:
+        return (self.__class__.__name__, *self.funcs)
     
 
     def __eq__(self, other: object) -> bool:
@@ -190,13 +190,13 @@ class Val(Function):
         return str(self.val)
 
 
-def _flatten(functions: list[Function], type: Function) -> Counter[Function]:
+def _flatten(functions: list[Function], t: type) -> Counter[Function]:
     funcs = Counter()
     for func in functions:
-            if isinstance(func, type):
-                funcs.update(func.func_counter)
-            else:
-                funcs.update([func])
+        if isinstance(func, t):
+            funcs.update(func.func_counter)
+        else:
+            funcs.update([func])
     return funcs
 
 class Sum(Function):
@@ -208,7 +208,7 @@ class Sum(Function):
 
 
     def __hash__(self) -> int:
-        return self.func_counter.__hash__()
+        return 2 * tuple(self.func_counter.elements()).__hash__()
 
 
     def __eq__(self, other: object) -> bool:
@@ -263,7 +263,7 @@ class Sum(Function):
 
 
     def __str__(self) -> str:
-        return "+".join(self.funcs.__str__())
+        return "+".join([func.__str__() for func in self.funcs])
 
 
 class Substraction(Sum):
@@ -280,7 +280,7 @@ class Product(Function):
 
 
     def __hash__(self) -> int:
-        return self.func_counter.__hash__()
+        return 3 * tuple(self.func_counter.elements()).__hash__()
 
 
     def __eq__(self, other: object) -> bool:
@@ -340,7 +340,7 @@ class Division(Product):
     def __init__(self, numerator: Function, denominator: Function) -> None:
         self.numerator = numerator
         self.denominator = denominator
-        super().__init__(numerator, Inverse(denominator))
+        super().__init__([numerator, Inverse(denominator)])
 
 
     def __str__(self) -> str:
@@ -351,13 +351,14 @@ class Neg(Product):
     
     def __init__(self, function: Function):
         super().__init__([Val(-1), function])
+        self.function = function
 
 
 class Exp(Function):
     
     def __init__(self, func: Function) -> None:
         self.func = func
-        super.__init__([self.func])
+        super().__init__([self.func])
 
 
     def _substitute(self, substitutions: dict[Function, Function]) -> Function:
@@ -389,7 +390,11 @@ class IntegerPower(Function):
     
 
     def __str__(self) -> str:
-        return "("+self.base.__str__()+")"+"^"+str(self.exp)
+        if self.exp < 0.0:
+            exp = "(" + str(self.exp) + ")"
+        else:
+            exp = str(self.exp)
+        return "("+str(self.base)+")"+"^"+str(exp)
 
 class Power(Exp):
 
