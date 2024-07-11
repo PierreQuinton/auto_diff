@@ -1,4 +1,4 @@
-from functions import Function, Neg
+from .functions import Function, Neg
 
 
 class Cos(Function):
