@@ -167,28 +167,27 @@ class Sum(Function):
         funcs = []
         for func in self.func_counter:
             funcs += [func.simplify()] * self.func_counter[func]
-        non_val_funcs = []  # Used?
-        func_dict = dict()
+        monomials = dict()
         for func in funcs:
             if isinstance(func, Val):
-                term = Product([])
+                terms = []
                 val = func.val
             else:
                 if not isinstance(func, Product):
-                    term = Product([func])
+                    terms = [func]
                     val = 1.0
-                elif not isinstance(func.funcs[0], Val):
-                    term = Product(func.funcs)
-                    val = 1.0
-                else:
-                    term = Product(func.funcs[1:])
+                elif isinstance(func.funcs[0], Val):
+                    terms = func.funcs[1:]
                     val = func.funcs[0].val
-            if term in func_dict:
-                func_dict[term] += val
+                else:
+                    terms = func.funcs
+                    val = 1.0
+            if terms in monomials:
+                monomials[terms] += val
             else:
-                func_dict[term] = val
+                monomials[terms] = val
 
-        funcs = [Product([Val(val), *cast(Product, term).funcs]).simplify() for term, val in func_dict.items()]
+        funcs = [Product([Val(val), *terms]).simplify() for terms, val in monomials.items()]
 
         if len(funcs) == 0:
             return Val(0.0)
