@@ -359,6 +359,15 @@ class Exp(Function):
         self.func = func
         super.__init__([self.func])
 
+    
+    def simplify(self) -> Function:
+        func = self.func.simplify()
+        if isinstance(func, Val):
+            return Val(math.exp(func.val))
+        elif isinstance(func, Ln):
+            return func.func
+        return Exp(func)
+
 
     def _substitute(self, substitutions: dict[Function, Function]) -> Function:
         return Exp(self.func.substitute(substitutions))
