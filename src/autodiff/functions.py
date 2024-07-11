@@ -314,6 +314,14 @@ class Division(Product):
     def __str__(self) -> str:
         return "(" + self.numerator.__str__() + ")" + "/" + "(" + self.denominator.__str__() + ")"
     
+    def simplify(self) -> Function:
+        denominator = self.denominator.simplify()
+        numerator = self.numerator.simplify()
+        if denominator == Val(1.0):
+            return numerator
+        elif numerator == Val(1.0):
+            return Inverse(denominator)
+        return Division(denominator,numerator)
 
 class Neg(Product):
 
