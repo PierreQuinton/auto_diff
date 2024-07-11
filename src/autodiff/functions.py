@@ -269,6 +269,8 @@ class Product(Function):
         non_val_funcs = []
         for func in funcs:
             if isinstance(func, Val):
+                if func.val == 0.0:
+                    return Val(0.0)
                 val *= func.val
             else:
                 non_val_funcs += [func]
