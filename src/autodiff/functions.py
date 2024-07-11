@@ -232,6 +232,30 @@ class Product(Function):
         return False
 
 
+    def simplify(self) -> Function:
+        funcs = []
+        for func in self.func_counter:
+            funcs += [func.simplify()] * self.func_counter[func]
+        val = 1.0
+        non_val_funcs = []
+        for func in funcs:
+            if isinstance(func, Val):
+                val *= func.val
+            else:
+                non_val_funcs += [func]
+
+        if val == 1.0:
+            funcs = non_val_funcs
+        else:
+            funcs = [Val(val), *non_val_funcs]
+
+        if len(funcs) == 0:
+            return Val(1.0)
+        elif len(funcs) == 1:
+            return funcs[0]
+        return Product(funcs)
+
+
     def _substitute(self, substitutions: dict[Function, Function]) -> Function:
         funcs = []
         for func in self.func_counter:
@@ -280,6 +304,8 @@ class Power(Exp):
         self.exp = exp
         func = Product([Ln(base), exp])
         super().__init__(func)
+        self.base = base
+        self.exp = exp
 
     
     def __str__(self) -> str:
