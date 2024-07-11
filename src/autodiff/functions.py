@@ -71,6 +71,58 @@ class Function():
             Product([self.partial(func), func.differentiate(var)])
             for func in self.funcs
         ])
+    
+  
+    def __add__(self, other: Function | float | int):
+        if isinstance(other, Function):
+            return Sum([self, other])
+        elif isinstance(other, float):
+            return Sum([self, Val(other)])
+        elif isinstance(other, int):
+            return Sum([self, Val(float(other))])
+    
+
+    __radd__ = __add__
+
+
+    def __sub__(self,other: Function | float | int):
+        if isinstance(other, Function):
+            return Substraction([self, other])
+        elif isinstance(other, float):
+            return Substraction([self, Val(other)])
+        elif isinstance(other, int):
+            return Substraction([self, Val(float(other))])
+       
+    
+    
+    def __mul__(self, other: Function | float | int):
+        if isinstance(other, Function):
+            return Product([self, other])
+        elif isinstance(other, float):
+            return Product([self, Val(other)])
+        elif isinstance(other, int):
+            return Product([self, Val(float(other))])
+    
+    
+    __rmul__ = __mul__
+
+
+    def __truediv__(self,other: Function | float | int):
+        if isinstance(other, Function):
+            return Division([self, other])
+        elif isinstance(other, float):
+            return Division([self, Val(other)])
+        elif isinstance(other, int):
+            return Division([self, Val(float(other))])
+    
+    
+    def __pow__(self,other: Function | float | int):
+        if isinstance(other, Function):
+            return Power([self, other])
+        elif isinstance(other, float):
+            return Power([self, Val(other)])
+        elif isinstance(other, int):
+            return IntegerPower([self, Val(float(other))])
 
 
 class Var(Function):
