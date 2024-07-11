@@ -201,7 +201,7 @@ class Sum(Function):
             funcs += [func.simplify()] * self.func_counter[func]
         monomials = dict()
         for func in funcs:
-            print(func.__class__)
+            # print(func.__class__)
             if isinstance(func, Neg) and func != self.funcs[0]:
                 print(func, self.funcs[0])
                 func = Substraction(self, func)
