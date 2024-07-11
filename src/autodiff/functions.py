@@ -87,11 +87,11 @@ class Function():
 
     def __sub__(self,other: Function | float | int):
         if isinstance(other, Function):
-            return Substraction([self, other])
+            return Substraction(self, other)
         elif isinstance(other, float):
-            return Substraction([self, Val(other)])
+            return Substraction(self, Val(other))
         elif isinstance(other, int):
-            return Substraction([self, Val(float(other))])
+            return Substraction(self, Val(float(other)))
        
     
     
@@ -109,20 +109,20 @@ class Function():
 
     def __truediv__(self,other: Function | float | int):
         if isinstance(other, Function):
-            return Division([self, other])
+            return Division(self, other)
         elif isinstance(other, float):
-            return Division([self, Val(other)])
+            return Division(self, Val(other))
         elif isinstance(other, int):
-            return Division([self, Val(float(other))])
+            return Division(self, Val(float(other)))
     
     
     def __pow__(self,other: Function | float | int):
         if isinstance(other, Function):
-            return Power([self, other])
+            return Power(self, other)
         elif isinstance(other, float):
-            return Power([self, Val(other)])
+            return Power(self, Val(other))
         elif isinstance(other, int):
-            return IntegerPower([self, Val(float(other))])
+            return IntegerPower(self, other)
 
 
 class Var(Function):
