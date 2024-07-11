@@ -198,7 +198,6 @@ class Sum(Function):
     def simplify(self) -> Function:
         funcs = []
         for func in self.func_counter:
-            print(func.simplify())
             funcs += [func.simplify()] * self.func_counter[func]
         monomials = dict()
         for func in funcs:
