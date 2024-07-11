@@ -52,7 +52,7 @@ class Function:
         raise NotImplementedError
     
 
-    def _list_representation(self) -> tuple[str | Function]:
+    def _list_representation(self) -> tuple[str|Function, ...]:
         return (self.__class__.__name__, *self.funcs)
     
 
@@ -60,7 +60,7 @@ class Function:
         if isinstance(other, Function):
             return self._list_representation() == other._list_representation()
         return False
-    
+
 
     def __hash__(self) -> int:
         return self._list_representation().__hash__()
@@ -190,11 +190,11 @@ class Val(Function):
         return str(self.val)
 
 
-def _flatten(functions: list[Function], t: type) -> Counter[Function]:
+def _flatten(functions: Iterable[Function], t: type) -> Counter[Function]:
     funcs = Counter()
     for func in functions:
         if isinstance(func, t):
-            funcs.update(func.func_counter)
+            funcs.update(func.funcs)
         else:
             funcs.update([func])
     return funcs
