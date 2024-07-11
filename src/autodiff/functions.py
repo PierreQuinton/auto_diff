@@ -300,12 +300,9 @@ class Product(Function):
 
     def _partial(self, func: Function) -> Function:
         products = []
-        count = 0
         for function in self.func_counter:
-            if function != func and not count:
+            if function != func:
                 products.append(function)
-            else:
-                count = 1
         return Product(products)
 
     def __str__(self) -> str:
@@ -407,14 +404,6 @@ class Power(Exp):
 
     def __str__(self) -> str:
         return "(" + self.base.__str__() + ")" + "^" + "(" + self.exp.__str__() + ")"
-
-    def simplify(self) -> Function:
-        func = self.func.simplify()
-        if isinstance(func, Val):
-            return Val(math.exp(func.val))
-        elif isinstance(func, Power):
-            return func.func
-        return Power(func)
 
 
 class Inverse(IntegerPower):
