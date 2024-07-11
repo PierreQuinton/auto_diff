@@ -369,7 +369,7 @@ class Exp(Function):
     
 
     def __str__(self) -> str:
-        return "exp("+ self.func.__str__() +")"
+        return "exp("+self.func.__str__()+")"
 
 
 class IntegerPower(Function):
@@ -389,7 +389,7 @@ class IntegerPower(Function):
     
 
     def __str__(self) -> str:
-        return "("+self.base.__str__+")"+"^"+str(self.exp)
+        return "("+self.base.__str__()+")"+"^"+str(self.exp)
 
 class Power(Exp):
 
@@ -401,7 +401,7 @@ class Power(Exp):
 
     
     def __str__(self) -> str:
-        return "("+self.base.__str__+")"+"^"+"("+self.exp.__str__+")"
+        return "("+self.base.__str__()+")"+"^"+"("+self.exp.__str__()+")"
 
 
 class Inverse(IntegerPower):
@@ -426,4 +426,4 @@ class Ln(Function):
 
 
     def __str__(self) -> str:
-        return "log(" + self.func.__str__() + ")"
+        return "log("+self.func.__str__()+")"
