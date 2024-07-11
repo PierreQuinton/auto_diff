@@ -1,7 +1,7 @@
 from __future__ import annotations
 from collections import Counter
-
-from typing import Iterable, cast
+from typing import Iterable
+import math
 
 
 class Function():
@@ -415,6 +415,15 @@ class Ln(Function):
     def __init__(self, func: Function) -> None:
         self.func = func
         super().__init__([self.func])
+
+
+    def simplify(self) -> Function:
+        func = self.func.simplify()
+        if isinstance(func, Val):
+            return Val(math.log(func.val))
+        elif isinstance(func, Exp):
+            return func.func
+        return Ln(func)
          
     
     def _substitute(self, substitutions: dict[Function, Function]) -> Function:
