@@ -9,10 +9,6 @@ class Function:
     def __init__(self, funcs: Iterable[Function]) -> None:
         self.funcs = tuple(funcs)
 
-    # def __apply__(self, values: dict[Var, Val]) -> Val:
-    #     if values.keys != self.funcs:
-    #         raise ValueError("Wrong keys")
-    #     self._substitute(values)
     def evaluate(self, substitutions: dict[Var, float]) -> float:
         final_val = self.substitute({var: Val(val) for var, val in substitutions.items()}).simplify()
         if isinstance(final_val, Val):
