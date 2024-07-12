@@ -77,11 +77,11 @@ class Function:
 
     def __sub__(self, other: Function | float | int):
         if isinstance(other, Function):
-            return Substraction(self, other)
+            return Subtraction(self, other)
         elif isinstance(other, float):
-            return Substraction(self, Val(other))
+            return Subtraction(self, Val(other))
         elif isinstance(other, int):
-            return Substraction(self, Val(float(other)))
+            return Subtraction(self, Val(float(other)))
 
     def __mul__(self, other: Function | float | int):
         if isinstance(other, Function):
@@ -204,7 +204,7 @@ class Sum(Function):
             # print(func.__class__)
             if isinstance(func, Neg) and func != self.funcs[0]:
                 print(func, self.funcs[0])
-                func = Substraction(self, func)
+                func = Subtraction(self, func)
 
             if isinstance(func, Val):
                 terms = tuple()
@@ -247,7 +247,7 @@ class Sum(Function):
         return "+".join([func.__str__() for func in self.funcs])
 
 
-class Substraction(Sum):
+class Subtraction(Sum):
 
     def __init__(self, function_1: Function, function_2: Function) -> None:
         super().__init__([function_1, Neg(function_2)])
