@@ -14,12 +14,15 @@ class Function:
     #         raise ValueError("Wrong keys")
     #     self._substitute(values)
     def evaluate(self, substitutions: dict[Var, float]) -> float:
-        final_val = self.substitute({var: Val(val) for var, val in substitutions.items()}).simplify()
+        final_val = self.substitute({var: Val(val) for var, val in substitutions.items()})._simplify()
         if isinstance(final_val, Val):
             return final_val.val
         raise ValueError("Should provide substitution for all Vars")
 
     def simplify(self) -> Function:
+        return _SimplifiedFunction(self._simplify())
+
+    def _simplify(self) -> Function:
         raise NotImplementedError
 
     def substitute(self, substitutions: dict[Function, Function]) -> Function:
@@ -28,13 +31,6 @@ class Function:
         return self._substitute(substitutions)
 
     def _substitute(self, substitutions: dict[Function, Function]) -> Function:
-        raise NotImplementedError
-
-    def _evaluate(self, values: dict[Var, Val]) -> Val:
-        """
-        This raises an error when the program didn't find 
-         an evaluation in the already implemented functions.
-        """
         raise NotImplementedError
 
     def partial(self, func: Function) -> Function:
@@ -63,8 +59,8 @@ class Function:
         gradient = {}
 
         for var in variables:
-            simplified_self = self.simplify()
-            gradient[var] = simplified_self._differentiate(var).simplify()
+            simplified_self = self._simplify()
+            gradient[var] = simplified_self._differentiate(var)._simplify()
         return gradient
     
     def _differentiate(self, var: Var) -> Function:
@@ -121,6 +117,21 @@ class Function:
         return self.__str__()
 
 
+class _SimplifiedFunction(Function):
+    def __init__(self, func: Function):
+        super().__init__([func])
+        self.func = func
+
+    def simplify(self) -> Function:
+        return self
+
+    def _substitute(self, substitutions: dict[Function, Function]) -> Function:
+        return self.func._substitute(substitutions)
+
+    def _partial(self, func: Function) -> Function:
+        return self.func._partial(func)
+
+
 class Var(Function):
 
     def __init__(self, name: str) -> None:
@@ -150,7 +161,7 @@ class Var(Function):
     def __str__(self) -> str:
         return str(self.name)
 
-    def simplify(self) -> Function:
+    def _simplify(self) -> Function:
         return self
 
 
@@ -177,7 +188,7 @@ class Val(Function):
     def __str__(self) -> str:
         return str(self.val)
 
-    def simplify(self) -> Function:
+    def _simplify(self) -> Function:
         return self
 
 
@@ -206,10 +217,10 @@ class Sum(Function):
             return self.func_counter == other.func_counter
         return False
 
-    def simplify(self) -> Function:
+    def _simplify(self) -> Function:
         funcs = []
         for func in self.func_counter:
-            funcs += [func.simplify()] * self.func_counter[func]
+            funcs += [func._simplify()] * self.func_counter[func]
         monomials = dict()
         for func in funcs:
             # print(func.__class__)
@@ -236,7 +247,7 @@ class Sum(Function):
             else:
                 monomials[terms] = val
 
-        funcs = [Product([Val(val), *terms]).simplify() for terms, val in monomials.items()]
+        funcs = [Product([Val(val), *terms])._simplify() for terms, val in monomials.items()]
         funcs = [func for func in funcs if func != Val(0.0)]
 
         if len(funcs) == 0:
@@ -278,10 +289,10 @@ class Product(Function):
             return self.func_counter == other.func_counter
         return False
 
-    def simplify(self) -> Function:
+    def _simplify(self) -> Function:
         funcs = []
         for func in self.func_counter:
-            funcs += [func.simplify()] * self.func_counter[func]
+            funcs += [func._simplify()] * self.func_counter[func]
         val = 1.0
         non_val_funcs = []
         for func in funcs:
@@ -332,9 +343,9 @@ class Division(Product):
     def __str__(self) -> str:
         return "(" + self.numerator.__str__() + ")" + "/" + "(" + self.denominator.__str__() + ")"
 
-    def simplify(self) -> Function:
-        denominator = self.denominator.simplify()
-        numerator = self.numerator.simplify()
+    def _simplify(self) -> Function:
+        denominator = self.denominator._simplify()
+        numerator = self.numerator._simplify()
         if denominator == Val(1.0):
             return numerator
         elif numerator == Val(1.0):
@@ -358,8 +369,8 @@ class Exp(Function):
         self.func = func
         super().__init__([self.func])
 
-    def simplify(self) -> Function:
-        func = self.func.simplify()
+    def _simplify(self) -> Function:
+        func = self.func._simplify()
         if isinstance(func, Val):
             return Val(math.exp(func.val))
         elif isinstance(func, Ln):
@@ -383,8 +394,8 @@ class IntegerPower(Function):
         self.base = base
         super().__init__([base])
 
-    def simplify(self) -> Function:
-        base = self.base.simplify()
+    def _simplify(self) -> Function:
+        base = self.base._simplify()
         if isinstance(base, Val):
             return Val(base.val ** self.exp)
         elif self.exp == 0:
@@ -431,8 +442,8 @@ class Ln(Function):
         self.func = func
         super().__init__([self.func])
 
-    def simplify(self) -> Function:
-        func = self.func.simplify()
+    def _simplify(self) -> Function:
+        func = self.func._simplify()
         if isinstance(func, Val):
             return Val(math.log(func.val))
         elif isinstance(func, Exp):
