@@ -127,6 +127,9 @@ class _SimplifiedFunction(Function):
     def _partial(self, func: Function) -> Function:
         return self.func._partial(func)
 
+    def __str__(self):
+        return self.func.__str__()
+
 
 class Var(Function):
 
