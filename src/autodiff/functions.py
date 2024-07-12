@@ -60,10 +60,14 @@ class Function:
     def __hash__(self) -> int:
         return self._list_representation().__hash__()
 
-    def differentiate(self, var: Var) -> Function:
-        simplified_self = self.simplify()
-        return simplified_self._differentiate(var).simplify()
+    def differentiate(self, vars: set[Var]) -> dict[Var, Function]:
+        gradient = {}
 
+        for var in vars:
+            simplified_self = self.simplify()
+            gradient[var] = simplified_self._differentiate(var).simplify()
+        return gradient
+    
     def _differentiate(self, var: Var) -> Function:
         return Sum([
             Product([self.partial(func), func._differentiate(var)])
