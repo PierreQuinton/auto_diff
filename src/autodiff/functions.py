@@ -116,6 +116,9 @@ class Function:
             return Power(self, Val(other))
         elif isinstance(other, int):
             return IntegerPower(self, other)
+    
+    def __repr__(self) -> str:
+        return self.__str__()
 
 
 class Var(Function):

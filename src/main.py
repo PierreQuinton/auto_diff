@@ -4,7 +4,7 @@ x = Var("x")
 y = Var("y")
 f = 3*x+y
 f = f.simplify()
-f2 = f.differentiate({x})[x]
+f2 = f.differentiate({x})
 
 print(f)
 print()
