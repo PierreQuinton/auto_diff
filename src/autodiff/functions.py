@@ -55,8 +55,8 @@ class Function:
         gradient = {}
 
         for var in variables:
-            simplified_self = self._simplify()
-            gradient[var] = simplified_self._differentiate(var)._simplify()
+            simplified_self = self.simplify()
+            gradient[var] = simplified_self._differentiate(var).simplify()
         return gradient
     
     def _differentiate(self, var: Var) -> Function:
@@ -219,7 +219,7 @@ class Sum(Function):
     def _simplify(self) -> Function:
         funcs = []
         for func in self.func_counter:
-            funcs += [func._simplify()] * self.func_counter[func]
+            funcs += [func.simplify()] * self.func_counter[func]
         monomials = dict()
         for func in funcs:
             # print(func.__class__)
@@ -246,7 +246,7 @@ class Sum(Function):
             else:
                 monomials[terms] = val
 
-        funcs = [Product([Val(val), *terms])._simplify() for terms, val in monomials.items()]
+        funcs = [Product([Val(val), *terms]).simplify() for terms, val in monomials.items()]
         funcs = [func for func in funcs if func != Val(0.0)]
 
         if len(funcs) == 0:
@@ -288,10 +288,10 @@ class Product(Function):
             return self.func_counter == other.func_counter
         return False
 
-    def _simplify(self) -> Function:
+    def simplify(self) -> Function:
         funcs = []
         for func in self.func_counter:
-            funcs += [func._simplify()] * self.func_counter[func]
+            funcs += [func.simplify()] * self.func_counter[func]
         val = 1.0
         non_val_funcs = []
         for func in funcs:
@@ -343,8 +343,8 @@ class Division(Product):
         return "(" + self.numerator.__str__() + ")" + "/" + "(" + self.denominator.__str__() + ")"
 
     def _simplify(self) -> Function:
-        denominator = self.denominator._simplify()
-        numerator = self.numerator._simplify()
+        denominator = self.denominator.simplify()
+        numerator = self.numerator.simplify()
         if denominator == Val(1.0):
             return numerator
         elif numerator == Val(1.0):
@@ -369,7 +369,7 @@ class Exp(Function):
         super().__init__([self.func])
 
     def _simplify(self) -> Function:
-        func = self.func._simplify()
+        func = self.func.simplify()
         if isinstance(func, Val):
             return Val(math.exp(func.val))
         elif isinstance(func, Ln):
@@ -394,7 +394,7 @@ class IntegerPower(Function):
         super().__init__([base])
 
     def _simplify(self) -> Function:
-        base = self.base._simplify()
+        base = self.base.simplify()
         if isinstance(base, Val):
             return Val(base.val ** self.exp)
         elif self.exp == 0:
@@ -442,7 +442,7 @@ class Ln(Function):
         super().__init__([self.func])
 
     def _simplify(self) -> Function:
-        func = self.func._simplify()
+        func = self.func.simplify()
         if isinstance(func, Val):
             return Val(math.log(func.val))
         elif isinstance(func, Exp):
