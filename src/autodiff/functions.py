@@ -10,7 +10,7 @@ class Function:
         self.funcs = tuple(funcs)
 
     def evaluate(self, substitutions: dict[Var, float]) -> float:
-        final_val = self.substitute({var: Val(val) for var, val in substitutions.items()})._simplify()
+        final_val = self.substitute({var: Val(val) for var, val in substitutions.items()}).simplify()
         if isinstance(final_val, Val):
             return final_val.val
         raise ValueError("Should provide substitution for all Vars")
