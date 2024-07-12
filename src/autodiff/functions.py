@@ -81,11 +81,11 @@ class Function:
 
     def __sub__(self, other: Function | float | int):
         if isinstance(other, Function):
-            return Substraction(self, other)
+            return Subtraction(self, other)
         elif isinstance(other, float):
-            return Substraction(self, Val(other))
+            return Subtraction(self, Val(other))
         elif isinstance(other, int):
-            return Substraction(self, Val(float(other)))
+            return Subtraction(self, Val(float(other)))
 
     def __mul__(self, other: Function | float | int):
         if isinstance(other, Function):
@@ -205,11 +205,15 @@ class Sum(Function):
             funcs += [func.simplify()] * self.func_counter[func]
         monomials = dict()
         for func in funcs:
+            # print(func.__class__)
+            if isinstance(func, Neg) and func != self.funcs[0]:
+                print(func, self.funcs[0])
+                func = Subtraction(self, func)
+
             if isinstance(func, Val):
-                if func.val == 0.0:
-                    continue
                 terms = tuple()
                 val = func.val
+
             else:
                 if not isinstance(func, Product):
                     terms = (func,)
@@ -226,7 +230,7 @@ class Sum(Function):
                 monomials[terms] = val
 
         funcs = [Product([Val(val), *terms]).simplify() for terms, val in monomials.items()]
-        funcs = [func for func in funcs if func is not Val(0.0)]
+        funcs = [func for func in funcs if func != Val(0.0)]
 
         if len(funcs) == 0:
             return Val(0.0)
@@ -247,7 +251,7 @@ class Sum(Function):
         return "+".join([func.__str__() for func in self.funcs])
 
 
-class Substraction(Sum):
+class Subtraction(Sum):
 
     def __init__(self, function_1: Function, function_2: Function) -> None:
         super().__init__([function_1, Neg(function_2)])
@@ -300,12 +304,11 @@ class Product(Function):
 
     def _partial(self, func: Function) -> Function:
         products = []
-        count = 0
-        for function in self.func_counter:
-            if function != func and not count:
-                products.append(function)
+        for function, count in self.func_counter.items():
+            if function == func:
+                products.append(IntegerPower(function, count-1))
             else:
-                count = 1
+                products.append(IntegerPower(function, count))
         return Product(products)
 
     def __str__(self) -> str:
@@ -338,20 +341,8 @@ class Neg(Product):
         super().__init__([Val(-1), function])
         self.function = function
 
-
-def simplify(self) -> Function:  # DOESN'T WORK INSIDE SUM
-    func = self.function.simplify()
-    if isinstance(func, Val):
-        if func.val == 0.0:
-            return func
-        return Val(-func.val)
-    elif isinstance(func, Neg):
-        return func.function
-    return Neg(func)
-
-
-# def __str__(self) -> str:
-#     return "-" + self.function.__str__()
+    # def __str__(self) -> str:
+    #     return "-" + self.function.__str__()
 
 
 class Exp(Function):
@@ -419,14 +410,6 @@ class Power(Exp):
 
     def __str__(self) -> str:
         return "(" + self.base.__str__() + ")" + "^" + "(" + self.exp.__str__() + ")"
-
-    def simplify(self) -> Function:
-        func = self.func.simplify()
-        if isinstance(func, Val):
-            return Val(math.exp(func.val))
-        elif isinstance(func, Power):
-            return func.func
-        return Power(func)
 
 
 class Inverse(IntegerPower):
