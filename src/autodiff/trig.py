@@ -8,8 +8,8 @@ class Cos(Function):
         self.func = func
         super().__init__([self.func])
 
-    def _simplify(self) -> Function:
-        func = self.func._simplify()
+    def simplify(self) -> Function:
+        func = self.func.simplify()
         if isinstance(func, Val):
             return Val(math.cos(func.val))
         return Cos(func)
@@ -30,8 +30,8 @@ class Sin(Function):
         self.func = func
         super().__init__([self.func])
 
-    def _simplify(self) -> Function:
-        func = self.func._simplify()
+    def simplify(self) -> Function:
+        func = self.func.simplify()
         if isinstance(func, Val):
             return Val(math.sin(func.val))
         return Sin(func)

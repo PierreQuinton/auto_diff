@@ -16,9 +16,6 @@ class Function:
         raise ValueError("Should provide substitution for all Vars")
 
     def simplify(self) -> Function:
-        return _SimplifiedFunction(self._simplify())
-
-    def _simplify(self) -> Function:
         raise NotImplementedError
 
     def substitute(self, substitutions: dict[Function, Function]) -> Function:
@@ -113,24 +110,6 @@ class Function:
         return self.__str__()
 
 
-class _SimplifiedFunction(Function):
-    def __init__(self, func: Function):
-        super().__init__([func])
-        self.func = func
-
-    def simplify(self) -> Function:
-        return self
-
-    def _substitute(self, substitutions: dict[Function, Function]) -> Function:
-        return self.func._substitute(substitutions)
-
-    def _partial(self, func: Function) -> Function:
-        return self.func._partial(func)
-
-    def __str__(self):
-        return self.func.__str__()
-
-
 class Var(Function):
 
     def __init__(self, name: str) -> None:
@@ -160,7 +139,7 @@ class Var(Function):
     def __str__(self) -> str:
         return str(self.name)
 
-    def _simplify(self) -> Function:
+    def simplify(self) -> Function:
         return self
 
 
@@ -187,7 +166,7 @@ class Val(Function):
     def __str__(self) -> str:
         return str(self.val)
 
-    def _simplify(self) -> Function:
+    def simplify(self) -> Function:
         return self
 
 
@@ -216,7 +195,7 @@ class Sum(Function):
             return self.func_counter == other.func_counter
         return False
 
-    def _simplify(self) -> Function:
+    def simplify(self) -> Function:
         funcs = []
         for func in self.func_counter:
             funcs += [func.simplify()] * self.func_counter[func]
@@ -342,7 +321,7 @@ class Division(Product):
     def __str__(self) -> str:
         return "(" + self.numerator.__str__() + ")" + "/" + "(" + self.denominator.__str__() + ")"
 
-    def _simplify(self) -> Function:
+    def simplify(self) -> Function:
         denominator = self.denominator.simplify()
         numerator = self.numerator.simplify()
         if denominator == Val(1.0):
@@ -368,7 +347,7 @@ class Exp(Function):
         self.func = func
         super().__init__([self.func])
 
-    def _simplify(self) -> Function:
+    def simplify(self) -> Function:
         func = self.func.simplify()
         if isinstance(func, Val):
             return Val(math.exp(func.val))
@@ -393,7 +372,7 @@ class IntegerPower(Function):
         self.base = base
         super().__init__([base])
 
-    def _simplify(self) -> Function:
+    def simplify(self) -> Function:
         base = self.base.simplify()
         if isinstance(base, Val):
             return Val(base.val ** self.exp)
@@ -441,7 +420,7 @@ class Ln(Function):
         self.func = func
         super().__init__([self.func])
 
-    def _simplify(self) -> Function:
+    def simplify(self) -> Function:
         func = self.func.simplify()
         if isinstance(func, Val):
             return Val(math.log(func.val))
