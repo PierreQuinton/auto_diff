@@ -300,9 +300,11 @@ class Product(Function):
 
     def _partial(self, func: Function) -> Function:
         products = []
-        for function in self.func_counter:
-            if function != func:
-                products.append(function)
+        for function, count in self.func_counter.items():
+            if function == func:
+                products.append(IntegerPower(function, count-1))
+            else:
+                products.append(IntegerPower(function, count))
         return Product(products)
 
     def __str__(self) -> str:
