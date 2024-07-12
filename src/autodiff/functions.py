@@ -1,6 +1,6 @@
 from __future__ import annotations
 from collections import Counter
-from typing import Iterable
+from typing import Iterable, cast
 import math
 
 
@@ -33,7 +33,7 @@ class Function:
     def _evaluate(self, values: dict[Var, Val]) -> Val:
         """
         This raises an error when the program didn't find 
-         an evalutation in the already implemented functions.
+         an evaluation in the already implemented functions.
         """
         raise NotImplementedError
 
@@ -44,8 +44,7 @@ class Function:
 
     def _partial(self, func: Function) -> Function:
         """
-        This raises an error when the program didn't find 
-         an differentiation in the already implemented functions.
+        This raises an error when the program didn't find a differentiation in the already implemented functions.
         """
         raise NotImplementedError
 
@@ -60,10 +59,10 @@ class Function:
     def __hash__(self) -> int:
         return self._list_representation().__hash__()
 
-    def differentiate(self, vars: set[Var]) -> dict[Var, Function]:
+    def differentiate(self, variables: set[Var]) -> dict[Var, Function]:
         gradient = {}
 
-        for var in vars:
+        for var in variables:
             simplified_self = self.simplify()
             gradient[var] = simplified_self._differentiate(var).simplify()
         return gradient
@@ -182,7 +181,7 @@ class Val(Function):
         return self
 
 
-def _flatten(functions: Iterable[Function], t: type) -> Counter[Function]:
+def _flatten(functions: Iterable[Function], t: type[Sum] | type[Product]) -> Counter[Function]:
     funcs = Counter()
     for func in functions:
         if isinstance(func, t):
@@ -228,7 +227,7 @@ class Sum(Function):
                     val = 1.0
                 elif isinstance(func.funcs[0], Val):
                     terms = tuple(func.funcs[1:])
-                    val = func.funcs[0].val
+                    val = cast(Val, func.funcs[0]).val
                 else:
                     terms = tuple(func.funcs)
                     val = 1.0
