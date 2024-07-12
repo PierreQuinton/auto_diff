@@ -13,6 +13,11 @@ class Function:
     #     if values.keys != self.funcs:
     #         raise ValueError("Wrong keys")
     #     self._substitute(values)
+    def evaluate(self, substitutions: dict[Var, float]) -> float:
+        final_val = self.substitute({var: Val(val) for var, val in substitutions.items()}).simplify()
+        if isinstance(final_val, Val):
+            return final_val.val
+        raise ValueError("Should provide substitution for all Vars")
 
     def simplify(self) -> Function:
         raise NotImplementedError
@@ -45,7 +50,7 @@ class Function:
         raise NotImplementedError
 
     def _list_representation(self) -> tuple[str | Function, ...]:
-        return (self.__class__.__name__, *self.funcs)
+        return self.__class__.__name__, *self.funcs
 
     def __eq__(self, other: object) -> bool:
         if isinstance(other, Function):
