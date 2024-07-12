@@ -1,11 +1,16 @@
-from autodiff import Var, Cos, Ln, Exp, Val, Neg
+from autodiff import *
+from gd import gradient_descent
 
 x = Var("x")
 y = Var("y")
-f = 3*x+y
-f = f._simplify()
-f2 = f.differentiate({x})
+z = Var("z")
+# f = Cos(3 * x - Ln(x ** 2 + 1) / Exp(x + x))
+f = x ** 2
+f = f.simplify()
+x_0 = {x: 3.0}
 
-print(f)
-print()
-print(f2)
+LEgrad = gradient_descent(f, x_0, 0.3)
+print(LEgrad)
+print(f.evaluate(LEgrad))
+
+# f2 = f.differentiate({x})
